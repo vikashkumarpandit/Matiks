@@ -1,0 +1,6 @@
+{
+  "appId": "com.matiks.offline.arena",
+  "appName": "Matiks Offline",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
