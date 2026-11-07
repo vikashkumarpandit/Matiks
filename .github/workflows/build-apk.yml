@@ -1,4 +1,4 @@
-name: Build Android APK
+Name: Build Android APK
 on:
   push:
     branches: [ main, master ]
@@ -30,19 +30,6 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap add android || true
           npx cap sync android
-      - name: Set Custom App Icon (launcher.png)
-        run: |
-          if [ -f "launcher.png" ]; then
-            # Android के सभी mipmap फोल्डर्स में कस्टम लोगो कॉपी करना
-            for dir in android/app/src/main/res/mipmap-*; do
-              cp launcher.png "$dir/ic_launcher.png"
-              cp launcher.png "$dir/ic_launcher_round.png"
-              cp launcher.png "$dir/ic_launcher_foreground.png"
-            done
-            # डिफ़ॉल्ट XML आइकॉन हटाना ताकि आपका PNG लोगो सीधा दिखे
-            rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-            rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
-          fi
 
       - name: Build Debug APK with Gradle
         run: |
@@ -55,4 +42,3 @@ jobs:
         with:
           name: Matiks-Offline-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
-
