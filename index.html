@@ -1,1671 +1,263 @@
 <!DOCTYPE html>
-<html lang="en" class="dark"><head>
-    <!-- Custom App Logo -->
-<link rel="icon" type="image/png" href="launcher.png">
-<link rel="apple-touch-icon" href="launcher.png">
-<link rel="manifest" href="manifest.json">
-
+<html lang="hi">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MATIKS // Play It Smart (Offline Pro Edition)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@600;700;800&amp;family=Space+Grotesk:wght@700;800&amp;display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matiks - Offline Brain Trainer</title>
     <style>
         :root {
-            --bg-main: #0E0E10;
-            --bg-card: #18181B;
-            --border-subtle: #27272A;
-            --neon-lime: #84CC16;
-            --puzzle-green: #22C55E;
-            --math-yellow: #EAB308;
-            --memory-blue: #38BDF8;
-            --logic-pink: #EC4899;
+            --bg-color: #0e1113;
+            --card-bg: #161b1e;
+            --accent-green: #a8ff35;
+            --accent-pink: #ff2a85;
+            --accent-blue: #2ae9ff;
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+        
+        /* Top Navigation Header */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid #21262d; font-size: 14px; }
+        .stats-group { display: flex; gap: 12px; align-items: center; }
+        .stat-badge { background: #21262d; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 13px; }
+        .back-btn { background: none; border: none; color: var(--accent-green); font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 8px; }
+        .back-btn:active { background: rgba(168,255,53,0.1); }
 
-        * {
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            box-sizing: border-box;
-        }
+        /* Main Content Area */
+        .main-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+        
+        /* Section Cards */
+        .section-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .game-card { background: var(--card-bg); border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #21262d; cursor: pointer; transition: transform 0.1s; }
+        .game-card:active { transform: scale(0.98); }
+        .game-info h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+        .game-info p { font-size: 12px; color: var(--text-muted); }
+        .rating-tag { font-size: 11px; background: rgba(168,255,53,0.15); color: var(--accent-green); padding: 2px 8px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 6px; }
 
-        html, body {
-            background-color: #070708;
-            color: #FFFFFF;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100dvh;
-            width: 100vw;
-            overflow: hidden;
-        }
+        /* Bottom Tab Bar */
+        .bottom-nav { display: flex; justify-content: space-around; background: var(--card-bg); padding: 10px 0; border-top: 1px solid #21262d; }
+        .nav-item { background: none; border: none; color: var(--text-muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .nav-item.active { color: var(--accent-green); font-weight: bold; }
 
-        .font-display {
-            font-family: 'Space Grotesk', sans-serif;
-            letter-spacing: -0.03em;
-        }
+        /* Game Play Screen */
+        .game-screen { display: none; flex-direction: column; height: 100%; justify-content: space-between; padding: 10px 0; }
+        .problem-box { font-size: 38px; font-weight: 900; text-align: center; margin: 15px 0; letter-spacing: 2px; color: var(--accent-green); }
+        .timer-display { text-align: center; font-size: 20px; font-weight: bold; color: var(--accent-pink); margin-bottom: 10px; }
 
-        .font-mono-num {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Subtle grid background for active math/logic games (Screenshot 7) */
-        .bg-grid-pattern {
-            background-size: 42px 42px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-        }
-
-        /* Custom Scrollbar for Home Feed only */
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #27272A;
-            border-radius: 9999px;
-        }
-
-        /* Compact 4x4 Keyboard Buttons (Screenshot 7) */
-        .key-4x4 {
-            background: #262629;
-            border-bottom: 2px solid #141416;
-            border-radius: 8px;
-            height: 47px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #FAFAFA;
-            transition: transform 0.05s ease, background-color 0.08s ease;
-        }
-        .key-4x4:active {
-            transform: translateY(2px);
-            background: #36363B;
-        }
-
-        /* Green Outlined Puzzle Number Pad Buttons (Screenshots 2, 3, 4) */
-        .puzzle-num-btn {
-            background: #141416;
-            border: 1.5px solid #22C55E;
-            box-shadow: 0 3px 0 #15803D;
-            border-radius: 12px;
-            color: #FFFFFF;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            transition: all 0.06s ease;
-        }
-        .puzzle-num-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #15803D;
-            background: #14532D;
-        }
-
-        @keyframes pulsePop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-            100% { transform: scale(1); }
-        }
-        .animate-pop {
-            animation: pulsePop 0.2s ease-out;
-        }
+        /* Compact 4x4 Keypad */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 320px; margin: 0 auto; width: 100%; padding-bottom: 10px; }
+        .key-btn { background: #21262d; color: white; border: none; padding: 14px 0; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; transition: background 0.1s; }
+        .key-btn:active { background: #30363d; }
+        .key-btn.action { background: rgba(255,42,133,0.2); color: var(--accent-pink); }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:0px}.z-10{z-index:10}.z-20{z-index:20}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-2\.5{margin-top:0.625rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1 / 1}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[100dvh\]{height:100dvh}.h-full{height:100%}.max-h-32{max-height:8rem}.max-h-64{max-height:16rem}.max-h-\[100dvh\]{max-height:100dvh}.max-h-\[90dvh\]{max-height:90dvh}.min-h-0{min-height:0px}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-full{width:100%}.max-w-\[200px\]{max-width:200px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.rotate-45{--tw-rotate:45deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-pre{white-space:pre}.whitespace-pre-line{white-space:pre-line}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-\[\#1B1B20\]{--tw-border-opacity:1;border-color:rgb(27 27 32 / var(--tw-border-opacity, 1))}.border-\[\#1C1C20\]{--tw-border-opacity:1;border-color:rgb(28 28 32 / var(--tw-border-opacity, 1))}.border-\[\#1F1F24\]{--tw-border-opacity:1;border-color:rgb(31 31 36 / var(--tw-border-opacity, 1))}.border-\[\#22C55E\]{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-\[\#22C55E\]\/40{border-color:rgb(34 197 94 / 0.4)}.border-\[\#24242C\]{--tw-border-opacity:1;border-color:rgb(36 36 44 / var(--tw-border-opacity, 1))}.border-\[\#25252C\]{--tw-border-opacity:1;border-color:rgb(37 37 44 / var(--tw-border-opacity, 1))}.border-\[\#26262B\]{--tw-border-opacity:1;border-color:rgb(38 38 43 / var(--tw-border-opacity, 1))}.border-\[\#26262E\]{--tw-border-opacity:1;border-color:rgb(38 38 46 / var(--tw-border-opacity, 1))}.border-\[\#27272A\]{--tw-border-opacity:1;border-color:rgb(39 39 42 / var(--tw-border-opacity, 1))}.border-\[\#27272E\]{--tw-border-opacity:1;border-color:rgb(39 39 46 / var(--tw-border-opacity, 1))}.border-\[\#2C2C34\]{--tw-border-opacity:1;border-color:rgb(44 44 52 / var(--tw-border-opacity, 1))}.border-\[\#2D2D35\]{--tw-border-opacity:1;border-color:rgb(45 45 53 / var(--tw-border-opacity, 1))}.border-\[\#2E2E34\]{--tw-border-opacity:1;border-color:rgb(46 46 52 / var(--tw-border-opacity, 1))}.border-\[\#2E2E36\]{--tw-border-opacity:1;border-color:rgb(46 46 54 / var(--tw-border-opacity, 1))}.border-\[\#32323D\]{--tw-border-opacity:1;border-color:rgb(50 50 61 / var(--tw-border-opacity, 1))}.border-\[\#38BDF8\]{--tw-border-opacity:1;border-color:rgb(56 189 248 / var(--tw-border-opacity, 1))}.border-\[\#84CC16\]{--tw-border-opacity:1;border-color:rgb(132 204 22 / var(--tw-border-opacity, 1))}.border-\[\#EAB308\]{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.border-\[\#EC4899\]{--tw-border-opacity:1;border-color:rgb(236 72 153 / var(--tw-border-opacity, 1))}.border-rose-500\/30{border-color:rgb(244 63 94 / 0.3)}.border-\[\#26262C\]{--tw-border-opacity:1;border-color:rgb(38 38 44 / var(--tw-border-opacity, 1))}.bg-\[\#0E0E10\]{--tw-bg-opacity:1;background-color:rgb(14 14 16 / var(--tw-bg-opacity, 1))}.bg-\[\#0E0E11\]{--tw-bg-opacity:1;background-color:rgb(14 14 17 / var(--tw-bg-opacity, 1))}.bg-\[\#101013\]{--tw-bg-opacity:1;background-color:rgb(16 16 19 / var(--tw-bg-opacity, 1))}.bg-\[\#121215\]{--tw-bg-opacity:1;background-color:rgb(18 18 21 / var(--tw-bg-opacity, 1))}.bg-\[\#141417\]{--tw-bg-opacity:1;background-color:rgb(20 20 23 / var(--tw-bg-opacity, 1))}.bg-\[\#151519\]{--tw-bg-opacity:1;background-color:rgb(21 21 25 / var(--tw-bg-opacity, 1))}.bg-\[\#16161A\]{--tw-bg-opacity:1;background-color:rgb(22 22 26 / var(--tw-bg-opacity, 1))}.bg-\[\#18181B\]{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-\[\#1A2416\]{--tw-bg-opacity:1;background-color:rgb(26 36 22 / var(--tw-bg-opacity, 1))}.bg-\[\#1B1B1F\]{--tw-bg-opacity:1;background-color:rgb(27 27 31 / var(--tw-bg-opacity, 1))}.bg-\[\#1C1C21\]{--tw-bg-opacity:1;background-color:rgb(28 28 33 / var(--tw-bg-opacity, 1))}.bg-\[\#1F1F26\]{--tw-bg-opacity:1;background-color:rgb(31 31 38 / var(--tw-bg-opacity, 1))}.bg-\[\#22C55E\]{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-\[\#22C55E\]\/15{background-color:rgb(34 197 94 / 0.15)}.bg-\[\#22C55E\]\/20{background-color:rgb(34 197 94 / 0.2)}.bg-\[\#232329\]{--tw-bg-opacity:1;background-color:rgb(35 35 41 / var(--tw-bg-opacity, 1))}.bg-\[\#23232B\]{--tw-bg-opacity:1;background-color:rgb(35 35 43 / var(--tw-bg-opacity, 1))}.bg-\[\#27272A\]{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.bg-\[\#27272E\]{--tw-bg-opacity:1;background-color:rgb(39 39 46 / var(--tw-bg-opacity, 1))}.bg-\[\#2DD4BF\]{--tw-bg-opacity:1;background-color:rgb(45 212 191 / var(--tw-bg-opacity, 1))}.bg-\[\#38BDF8\]{--tw-bg-opacity:1;background-color:rgb(56 189 248 / var(--tw-bg-opacity, 1))}.bg-\[\#38BDF8\]\/20{background-color:rgb(56 189 248 / 0.2)}.bg-\[\#A16207\]{--tw-bg-opacity:1;background-color:rgb(161 98 7 / var(--tw-bg-opacity, 1))}.bg-\[\#EAB308\]{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-\[\#EAB308\]\/10{background-color:rgb(234 179 8 / 0.1)}.bg-\[\#EAB308\]\/20{background-color:rgb(234 179 8 / 0.2)}.bg-\[\#EC4899\]{--tw-bg-opacity:1;background-color:rgb(236 72 153 / var(--tw-bg-opacity, 1))}.bg-\[\#EC4899\]\/20{background-color:rgb(236 72 153 / 0.2)}.bg-\[\#F472B6\]{--tw-bg-opacity:1;background-color:rgb(244 114 182 / var(--tw-bg-opacity, 1))}.bg-black\/85{background-color:rgb(0 0 0 / 0.85)}.bg-black\/90{background-color:rgb(0 0 0 / 0.9)}.bg-rose-500\/10{background-color:rgb(244 63 94 / 0.1)}.p-0\.5{padding:0.125rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.pb-1\.5{padding-bottom:0.375rem}.pb-2\.5{padding-bottom:0.625rem}.pb-4{padding-bottom:1rem}.pr-1{padding-right:0.25rem}.pr-3{padding-right:0.75rem}.pt-1{padding-top:0.25rem}.pt-2\.5{padding-top:0.625rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.uppercase{text-transform:uppercase}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-\[\#22C55E\]{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-\[\#38BDF8\]{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.text-\[\#4ADE80\]{--tw-text-opacity:1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.text-\[\#84CC16\]{--tw-text-opacity:1;color:rgb(132 204 22 / var(--tw-text-opacity, 1))}.text-\[\#EAB308\]{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.text-\[\#EC4899\]{--tw-text-opacity:1;color:rgb(236 72 153 / var(--tw-text-opacity, 1))}.text-\[\#F472B6\]{--tw-text-opacity:1;color:rgb(244 114 182 / var(--tw-text-opacity, 1))}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-zinc-200{--tw-text-opacity:1;color:rgb(228 228 231 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-\[\#22C55E\]\/25:hover{background-color:rgb(34 197 94 / 0.25)}.hover\:bg-\[\#292932\]:hover{--tw-bg-opacity:1;background-color:rgb(41 41 50 / var(--tw-bg-opacity, 1))}.hover\:bg-\[\#1F1F24\]:hover{--tw-bg-opacity:1;background-color:rgb(31 31 36 / var(--tw-bg-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-\[0\.99\]:active{--tw-scale-x:0.99;--tw-scale-y:0.99;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:border-x{border-left-width:1px;border-right-width:1px}.sm\:border-\[\#222226\]{--tw-border-opacity:1;border-color:rgb(34 34 38 / var(--tw-border-opacity, 1))}}</style></head>
-<body class="flex items-center justify-center">
+</head>
+<body>
 
-    <!-- STRICT 100dvh MOBILE SHELL (Never overflows screen height) -->
-    <div id="app-shell" class="w-full max-w-md h-[100dvh] bg-[#0E0E10] sm:border-x sm:border-[#222226] flex flex-col justify-between relative overflow-hidden">
-
-        <!-- ================= TOP HEADER BAR (Screenshots 1, 6, 8) ================= -->
-        <header id="top-header" class="px-3.5 py-2.5 flex items-center justify-between border-b border-[#1C1C20] bg-[#0E0E10] shrink-0 z-20">
-            <div class="flex items-center gap-2">
-                <!-- Green Coin / Smart Pill -->
-                <div class="flex items-center gap-1.5 bg-[#1B1B1F] border border-[#2E2E34] px-2.5 py-1 rounded-full">
-                    <span class="w-4 h-4 rounded-full bg-[#22C55E] flex items-center justify-center text-[9px] font-black text-black">π</span>
-                    <span id="header-coins" class="font-mono-num text-xs font-bold text-white">270</span>
-                </div>
-
-                <!-- Streak Pill -->
-                <div class="flex items-center gap-1 bg-[#1B1B1F] border border-[#2E2E34] px-2.5 py-1 rounded-full">
-                    <span class="text-xs">🔥</span>
-                    <span id="header-streak" class="font-mono-num text-xs font-bold text-zinc-200">1 / 2</span>
-                </div>
-
-                <!-- XP Pill -->
-                <div class="flex items-center gap-1.5 bg-[#1B1B1F] border border-[#2E2E34] px-2.5 py-1 rounded-full">
-                    <span class="w-3.5 h-3.5 rounded-md rotate-45 bg-[#A16207] border border-[#EAB308] inline-block"></span>
-                    <span id="header-xp" class="font-mono-num text-xs font-bold text-zinc-200">165 XP</span>
-                </div>
-            </div>
-
-            <!-- Quick APK Builder Trigger Button -->
-            <button onclick="openApkModal()" class="flex items-center gap-1 bg-[#22C55E]/15 hover:bg-[#22C55E]/25 border border-[#22C55E]/40 text-[#4ADE80] px-2.5 py-1 rounded-xl text-[11px] font-extrabold tracking-tight active:scale-95 transition">
-                <span>📦 APK</span>
-            </button>
-        </header>
-
-        <!-- ================= MAIN SCROLLABLE VIEWPORT (Home / Stats / Menu) ================= -->
-        <main id="main-content" class="flex-1 overflow-y-auto px-3.5 py-3 space-y-4 min-h-0">
-
-            <!-- VIEW 1: ARENA HOME -->
-            <section id="view-arena" class="space-y-4 pb-4">
-
-                <!-- Daily Challenges Card (0/7 Bar - Screenshot 6 & 8) -->
-                <div class="bg-[#18181B] border border-[#26262B] rounded-2xl p-3.5">
-                    <div class="flex items-center justify-between mb-2">
-                        <div>
-                            <h3 class="font-display text-sm font-extrabold uppercase tracking-wide text-white">DAILY CHALLENGES</h3>
-                            <p class="text-[11px] text-zinc-400">Complete to earn rewards</p>
-                        </div>
-                        <span class="text-zinc-400 font-bold text-sm">›</span>
-                    </div>
-                    <div class="w-full h-7 bg-[#232329] rounded-full p-0.5 flex items-center justify-between relative overflow-hidden">
-                        <div id="daily-pill-progress" class="h-full bg-[#141417] border-2 border-[#84CC16] rounded-full px-3 flex items-center justify-center z-10 transition-all" style="min-width: 54px;">
-                            <span id="daily-progress-text" class="font-mono-num text-[11px] font-extrabold text-white">0/7</span>
-                        </div>
-                        <span class="pr-3 text-xs text-[#84CC16] z-10">🏆</span>
-                    </div>
-                </div>
-
-                <!-- DUELS CATEGORY TABS (MATH, MEMORY, PUZZLE, LOGIC - Screenshots 6 & 8) -->
-                <div>
-                    <div class="text-[11px] font-bold tracking-widest uppercase text-zinc-400 mb-2">DUELS</div>
-                    <div class="grid grid-cols-4 gap-2.5">
-                        <!-- MATH TAB -->
-                        <button onclick="selectCategory('math')" id="tab-math" class="flex flex-col items-center group">
-                            <div id="tab-box-math" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#EAB308] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(234, 179, 8); background-color: rgba(234, 179, 8, 0.094);">
-                                <div class="w-8 h-8 rounded-lg bg-[#EAB308]/20 border border-[#EAB308] flex items-center justify-center text-[#EAB308] font-mono-num font-black text-sm">
-                                    ±×
-                                </div>
-                                <span id="rating-math" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-white border border-[#27272A]">1009</span>
-                            </div>
-                            <span id="tab-label-math" class="text-[11px] font-extrabold uppercase tracking-wider mt-1.5 text-[#EAB308]" style="color: rgb(234, 179, 8);">MATH</span>
-                        </button>
-
-                        <!-- MEMORY TAB -->
-                        <button onclick="selectCategory('memory')" id="tab-memory" class="flex flex-col items-center group">
-                            <div id="tab-box-memory" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
-                                <div class="w-8 h-8 rounded-lg bg-[#38BDF8]/20 border border-[#38BDF8] flex items-center justify-center text-[#38BDF8] font-mono-num font-black text-sm">
-                                    ❐
-                                </div>
-                                <span id="rating-memory" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1008</span>
-                            </div>
-                            <span id="tab-label-memory" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">MEMORY</span>
-                        </button>
-
-                        <!-- PUZZLE TAB -->
-                        <button onclick="selectCategory('puzzle')" id="tab-puzzle" class="flex flex-col items-center group">
-                            <div id="tab-box-puzzle" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
-                                <div class="w-8 h-8 rounded-lg bg-[#22C55E]/20 border border-[#22C55E] flex items-center justify-center text-[#22C55E] font-mono-num font-black text-sm">
-                                    ⊞
-                                </div>
-                                <span id="rating-puzzle" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
-                            </div>
-                            <span id="tab-label-puzzle" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">PUZZLE</span>
-                        </button>
-
-                        <!-- LOGIC TAB -->
-                        <button onclick="selectCategory('logic')" id="tab-logic" class="flex flex-col items-center group">
-                            <div id="tab-box-logic" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
-                                <div class="w-8 h-8 rounded-lg bg-[#EC4899]/20 border border-[#EC4899] flex items-center justify-center text-[#EC4899] font-mono-num font-black text-sm">
-                                    ◐
-                                </div>
-                                <span id="rating-logic" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
-                            </div>
-                            <span id="tab-label-logic" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">LOGIC</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DYNAMIC MODE CARDS CONTAINER -->
-                <div id="mode-cards-container" class="space-y-3">
-                <div onclick="openLobby('sprint')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
-                    
-                    <div class="mb-2">
-                        <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
-                            Rating: <span style="color:#EAB308">1009</span>
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="font-display text-2xl font-extrabold text-white whitespace-pre-line leading-none tracking-tight">SPRINT
-DUELS</h2>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-2.5">RACE TO SOLVE THE MOST IN 1 MINUTE.</p>
-                        </div>
-                        <span class="text-sm font-black" style="color:#EAB308">▸</span>
-                    </div>
-                </div>
-            
-                <div onclick="openLobby('fastest')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
-                    
-                    <div class="mb-2">
-                        <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
-                            Rating: <span style="color:#EAB308">1009</span>
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="font-display text-2xl font-extrabold text-white whitespace-pre-line leading-none tracking-tight">FASTEST FINGERS
-DUELS</h2>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-2.5">BE THE FIRST TO ANSWER EACH QUESTION.</p>
-                        </div>
-                        <span class="text-sm font-black" style="color:#EAB308">▸</span>
-                    </div>
-                </div>
-            
-                <div onclick="openLobby('anzan')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
-                    
-                    <div class="mb-2">
-                        <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
-                            Rating: <span style="color:#EAB308">1009</span>
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="font-display text-2xl font-extrabold text-white whitespace-pre-line leading-none tracking-tight">FLASH ANZAN
-DUELS</h2>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-2.5">NUMBERS FLASH, SUM THEM WITH SPEED.</p>
-                        </div>
-                        <span class="text-sm font-black" style="color:#EAB308">▸</span>
-                    </div>
-                </div>
-            </div>
-
-            </section>
-
-            <!-- VIEW 2: PRE-GAME MODE LOBBY -->
-            <section id="view-lobby" class="hidden space-y-4 pt-1">
-                <div class="flex items-center justify-between">
-                    <button onclick="showView('arena')" class="w-9 h-9 rounded-full bg-[#18181B] border border-[#27272A] flex items-center justify-center text-white font-bold">
-                        ←
-                    </button>
-                    <span class="text-[11px] font-extrabold uppercase tracking-widest text-zinc-400">OFFLINE DUEL LOBBY</span>
-                    <div class="w-9"></div>
-                </div>
-
-                <div>
-                    <span id="lobby-badge" class="px-2.5 py-0.5 rounded bg-[#27272A] text-[#22C55E] font-mono-num font-bold text-xs">Rating: 1000</span>
-                    <h1 id="lobby-title" class="font-display text-3xl font-extrabold text-white uppercase mt-2 leading-none">SUDOKU DUELS</h1>
-                    <p id="lobby-desc" class="text-xs font-bold uppercase tracking-wider text-zinc-400 mt-2">FILL THE 6x6 GRID WITH LOGIC AND SPEED.</p>
-                </div>
-
-                <!-- Mode Duration / Timer Selector -->
-                <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5 space-y-3">
-                    <div>
-                        <label class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1.5">TIMER MODE</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="setTimerMode('timed')" id="timer-btn-timed" class="py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#EAB308] bg-[#EAB308]/10 text-[#EAB308]">⏱ Timed Duel (1-2m)</button>
-                            <button onclick="setTimerMode('zen')" id="timer-btn-zen" class="py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400">∞ No Time Limit</button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1.5">OPPONENT</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="launchSelectedGame(true)" class="py-3.5 rounded-xl bg-[#EAB308] text-black font-display font-extrabold text-xs uppercase tracking-wider shadow active:scale-95 transition">
-                                🤖 PLAY VS BOT
-                            </button>
-                            <button onclick="launchSelectedGame(false)" class="py-3.5 rounded-xl bg-[#22C55E] text-black font-display font-extrabold text-xs uppercase tracking-wider shadow active:scale-95 transition">
-                                ⚡ SOLO PRACTICE
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW 3: STATS & OFFLINE LOGS -->
-            <section id="view-stats" class="hidden space-y-3 pb-4">
-                <h2 class="font-display text-xl font-extrabold text-white uppercase">OFFLINE CAREER STATS</h2>
-                <div class="grid grid-cols-2 gap-2.5">
-                    <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">PROBLEMS SOLVED</span>
-                        <div id="stat-solved" class="font-mono-num text-2xl font-extrabold text-[#22C55E] mt-0.5">0</div>
-                    </div>
-                    <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">BOT DUELS WON</span>
-                        <div id="stat-wins" class="font-mono-num text-2xl font-extrabold text-[#EAB308] mt-0.5">0</div>
-                    </div>
-                </div>
-                <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
-                    <div class="text-xs font-extrabold uppercase text-zinc-300 mb-2">RECENT MATCHES</div>
-                    <div id="history-container" class="space-y-2 max-h-64 overflow-y-auto text-xs text-zinc-400">
-                        No matches recorded yet.
-                    </div>
-                </div>
-                <button onclick="resetCareerData()" class="w-full py-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-extrabold uppercase">Reset All Local Storage Data</button>
-            </section>
-
-        </main>
-
-        <!-- ================= BOTTOM NAVIGATION BAR (Screenshots 1, 6, 8) ================= -->
-        <nav id="bottom-nav" class="bg-[#121215] border-t border-[#1F1F24] px-2 py-1.5 flex items-center justify-between shrink-0 z-20">
-            <button onclick="showView('arena')" id="nav-btn-arena" class="flex flex-col items-center justify-center py-1 px-3 text-[#84CC16]">
-                <span class="text-base leading-none">⚔️</span>
-                <span class="text-[10px] font-extrabold uppercase mt-1">ARENA</span>
-            </button>
-            <button onclick="selectCategory('puzzle'); showView('arena');" class="flex flex-col items-center justify-center py-1 px-3 text-zinc-400 hover:text-white">
-                <span class="text-base leading-none">🥨</span>
-                <span class="text-[10px] font-bold uppercase mt-1">SNAC</span>
-            </button>
-            <button onclick="showView('stats')" id="nav-btn-stats" class="flex flex-col items-center justify-center py-1 px-3 text-zinc-400 hover:text-white relative">
-                <span class="text-base leading-none">👑</span>
-                <span class="text-[10px] font-bold uppercase mt-1">QUESTS</span>
-            </button>
-            <button onclick="openApkModal()" class="flex flex-col items-center justify-center py-1 px-3 text-zinc-400 hover:text-white">
-                <span class="text-base leading-none">•••</span>
-                <span class="text-[10px] font-bold uppercase mt-1">APK BUILD</span>
-            </button>
-            <button onclick="selectCategory('logic'); showView('arena');" class="bg-[#F472B6] text-black px-3.5 py-1.5 rounded-2xl flex flex-col items-center justify-center font-extrabold">
-                <span class="text-sm leading-none">✿</span>
-                <span class="text-[10px] font-black uppercase mt-0.5">JELO</span>
-            </button>
-        </nav>
-
-        <!-- =========================================================================
-             STRICT 100dvh ACTIVE GAME SCREEN (NO SCROLLING EVER - FITS ALL SCREENS)
-             ========================================================================= -->
-        <div id="active-game-overlay" class="hidden fixed inset-0 w-full max-w-md mx-auto h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#0E0E10] z-40 flex flex-col justify-between select-none">
-
-            <!-- 1. COMPACT DUEL TOP HEADER (Matches Screenshots 2, 3, 4, 5, 7) -->
-            <div class="px-3 pt-2.5 pb-1.5 shrink-0 flex flex-col gap-1.5 border-b border-[#1B1B20] bg-[#0E0E10]">
-                <div class="flex items-center justify-between">
-                    <!-- Player Left -->
-                    <div class="flex items-center gap-2">
-                        <button onclick="exitActiveGame()" class="w-8 h-8 rounded-lg bg-[#EC4899] text-white font-display font-bold text-base flex items-center justify-center shadow" title="Tap to exit">
-                            d
-                        </button>
-                        <div>
-                            <div class="text-xs font-extrabold text-white leading-tight">you_offline</div>
-                            <div id="duel-player-rating" class="text-[10px] font-mono-num text-zinc-400">1000</div>
-                        </div>
-                    </div>
-
-                    <!-- Center Timer Pill -->
-                    <div class="flex items-center gap-1.5">
-                        <div class="px-3.5 py-1 rounded-full bg-[#151519] border border-[#27272E] font-mono-num text-sm font-bold text-[#38BDF8]" id="duel-timer">
-                            1:59
-                        </div>
-                        <button onclick="triggerFreeHint()" class="px-2 py-1 rounded-lg bg-[#1A2416] border border-[#22C55E]/40 text-[#4ADE80] text-[10px] font-extrabold" title="Free Hint">
-                            💡
-                        </button>
-                    </div>
-
-                    <!-- Bot Right -->
-                    <div class="flex items-center gap-2 text-right">
-                        <div>
-                            <div class="text-xs font-extrabold text-white leading-tight">catus_bot</div>
-                            <div class="text-[10px] font-mono-num text-zinc-400">1030</div>
-                        </div>
-                        <div class="w-8 h-8 rounded-lg bg-[#2DD4BF] text-black flex items-center justify-center text-base shadow">
-                            🐱
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Score Pills Row -->
-                <div class="flex items-center justify-between">
-                    <div id="duel-player-score" class="px-3.5 py-0.5 rounded-full bg-[#1C1C21] border border-[#2C2C34] font-mono-num text-xs font-bold text-white">
-                        0
-                    </div>
-                    <div id="duel-hint-toast" class="text-[10px] font-mono-num text-[#4ADE80] truncate max-w-[200px]"></div>
-                    <div id="duel-bot-score" class="px-3.5 py-0.5 rounded-full bg-[#1C1C21] border border-[#2C2C34] font-mono-num text-xs font-bold text-white">
-                        0
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. FLEXIBLE MIDDLE STAGE (Auto-scales to fit between top bar and bottom controls) -->
-            <div id="game-stage" class="flex-1 min-h-0 w-full flex flex-col items-center justify-center px-3 py-1 overflow-hidden relative bg-grid-pattern">
-                <!-- Dynamically populated by the active game engine -->
-            </div>
-
-            <!-- 3. COMPACT ELEVATED BOTTOM CONTROLS / KEYBOARD (Never clipped or scrolled) -->
-            <div id="game-controls" class="shrink-0 w-full px-2.5 pt-1 pb-2.5 bg-[#0E0E10]" style="padding-bottom: max(10px, env(safe-area-inset-bottom));">
-                <!-- Dynamically populated with either 4x4 Compact Keyboard OR Puzzle Controls -->
-            </div>
-
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <button class="back-btn" id="globalBackBtn" onclick="goHome()" style="display: none;">← Back</button>
+        <div id="screenTitle" style="font-weight: 800; font-size: 16px; color: var(--accent-green);">MATIKS OFFLINE</div>
+        <div class="stats-group">
+            <div class="stat-badge">🟢 270</div>
+            <div class="stat-badge">🔥 1/2</div>
         </div>
-
-        <!-- ================= POST-GAME RESULTS MODAL ================= -->
-        <div id="results-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="w-full max-w-sm bg-[#18181B] border border-[#2E2E36] rounded-3xl p-5 space-y-4 text-center shadow-2xl">
-                <span id="modal-badge" class="px-3 py-1 rounded-full bg-[#22C55E]/20 text-[#4ADE80] text-xs font-extrabold uppercase">MATCH FINISHED</span>
-                <h2 id="modal-title" class="font-display text-2xl font-extrabold text-white">VICTORY!</h2>
-                <p id="modal-subtitle" class="text-xs text-zinc-400">Progress saved to offline storage</p>
-
-                <div class="grid grid-cols-2 gap-2.5">
-                    <div class="bg-[#101013] border border-[#25252C] rounded-2xl p-3">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">YOUR SCORE</span>
-                        <div id="modal-user-score" class="font-mono-num text-2xl font-extrabold text-[#22C55E] mt-0.5">0</div>
-                    </div>
-                    <div class="bg-[#101013] border border-[#25252C] rounded-2xl p-3">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">BOT SCORE</span>
-                        <div id="modal-bot-score" class="font-mono-num text-2xl font-extrabold text-[#38BDF8] mt-0.5">0</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2.5 pt-1">
-                    <button onclick="closeResults()" class="py-3 rounded-xl bg-[#27272E] text-white font-bold text-xs uppercase">HOME</button>
-                    <button onclick="replayCurrentGame()" class="py-3 rounded-xl bg-[#EAB308] text-black font-extrabold text-xs uppercase">PLAY AGAIN ↻</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= GITHUB ACTIONS NATIVE APK BUILDER MODAL ================= -->
-        <div id="apk-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3">
-            <div class="w-full max-w-md max-h-[90dvh] bg-[#16161A] border border-[#2D2D35] rounded-3xl p-4 flex flex-col justify-between space-y-3 overflow-hidden shadow-2xl">
-                <div class="flex items-center justify-between border-b border-[#26262E] pb-2.5">
-                    <div>
-                        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#22C55E]/20 text-[#4ADE80]">CLOUD APK GENERATOR</span>
-                        <h3 class="font-display text-lg font-extrabold text-white mt-0.5">Build Native APK on GitHub</h3>
-                    </div>
-                    <button onclick="closeApkModal()" class="w-8 h-8 rounded-full bg-[#23232B] text-zinc-300 font-bold">✕</button>
-                </div>
-
-                <div class="overflow-y-auto space-y-3 pr-1 text-xs text-zinc-300 leading-relaxed">
-                    <p class="text-[11px] text-zinc-400">
-                        सिर्फ HTML फाइल से सीधा APK नहीं बनता, इसलिए नीचे दिए गए बटनों से **4 ज़रूरी कॉन्फ़िगरेशन फाइल्स** डाउनलोड करें और उन्हें अपने GitHub Repository में अपलोड कर दें। GitHub Actions अपने आप आपके लिए फ्री में **Android `.apk`** तैयार कर देगा!
-                    </p>
-
-                    <!-- Step-by-step file download buttons -->
-                    <div class="space-y-2">
-                        <button onclick="downloadRepoFile('index.html')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#4ADE80]">1. www/index.html (This App)</span>
-                            <span class="text-[10px] bg-[#22C55E] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
-                        </button>
-
-                        <button onclick="downloadRepoFile('package.json')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#EAB308]">2. package.json (Capacitor Deps)</span>
-                            <span class="text-[10px] bg-[#EAB308] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
-                        </button>
-
-                        <button onclick="downloadRepoFile('capacitor.config.json')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#38BDF8]">3. capacitor.config.json</span>
-                            <span class="text-[10px] bg-[#38BDF8] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
-                        </button>
-
-                        <button onclick="downloadRepoFile('build-apk.yml')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#F472B6]">4. .github/workflows/build-apk.yml</span>
-                            <span class="text-[10px] bg-[#F472B6] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
-                        </button>
-                    </div>
-
-                    <div class="bg-[#0E0E11] border border-[#24242C] rounded-xl p-2.5">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-mono-num text-zinc-400">.github/workflows/build-apk.yml</span>
-                            <button onclick="copyWorkflowYaml()" id="copy-yaml-btn" class="text-[10px] font-extrabold text-[#4ADE80]">COPY CODE</button>
-                        </div>
-                        <pre id="yaml-preview" class="text-[10px] font-mono-num text-zinc-400 overflow-x-auto whitespace-pre leading-snug max-h-32">name: Build Android APK
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-
-jobs:
-  build-apk:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Setup Java JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Install Capacitor &amp; Android Platform
-        run: |
-          mkdir -p www
-          cp index.html www/index.html || true
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android || true
-          npx cap sync android
-
-      - name: Build Debug APK with Gradle
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
-
-      - name: Upload Ready-to-Install APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Matiks-Offline-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk</pre>
-                    </div>
-                </div>
-
-                <button onclick="closeApkModal()" class="w-full py-3 rounded-xl bg-[#22C55E] text-black font-extrabold text-xs uppercase">DONE</button>
-            </div>
-        </div>
-
     </div>
 
+    <!-- Main Container -->
+    <div class="main-container" id="mainContainer">
+        <!-- ARENA TAB (Default Home) -->
+        <div id="tabArena" class="tab-content">
+            <div class="section-title">DUELS</div>
+            
+            <div class="game-card" onclick="startPlay('Sprint Duels', 'math')">
+                <div class="game-info">
+                    <span class="rating-tag">Rating: 1009</span>
+                    <h3>SPRINT DUELS</h3>
+                    <p>Race to solve the most in 1 minute</p>
+                </div>
+                <span style="color: var(--accent-green); font-size: 18px;">▶</span>
+            </div>
+
+            <div class="game-card" onclick="startPlay('Fastest Fingers', 'math')" style="margin-top: 10px;">
+                <div class="game-info">
+                    <span class="rating-tag">Rating: 1000</span>
+                    <h3>FASTEST FINGERS DUELS</h3>
+                    <p>Be the first to answer each question</p>
+                </div>
+                <span style="color: var(--accent-green); font-size: 18px;">▶</span>
+            </div>
+
+            <div class="game-card" onclick="startPlay('Sudoku 6x6', 'puzzle')" style="margin-top: 10px;">
+                <div class="game-info">
+                    <span class="rating-tag">Rating: 1000</span>
+                    <h3>SUDOKU DUELS</h3>
+                    <p>Fill the grid with logic and speed</p>
+                </div>
+                <span style="color: var(--accent-green); font-size: 18px;">▶</span>
+            </div>
+
+            <div class="game-card" onclick="startPlay('Cross Math', 'puzzle')" style="margin-top: 10px;">
+                <div class="game-info">
+                    <span class="rating-tag">Rating: 1000</span>
+                    <h3>CROSS MATH DUELS</h3>
+                    <p>Outsolve your rival, fill the grid</p>
+                </div>
+                <span style="color: var(--accent-green); font-size: 18px;">▶</span>
+            </div>
+        </div>
+
+        <!-- ACTIVE GAME SCREEN -->
+        <div id="gamePlayScreen" class="game-screen" style="display: none;">
+            <div>
+                <div class="timer-display" id="gameTimer">1:00</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px;" id="gameSubMode">Score: <span id="currentScore">0</span></div>
+                <div class="problem-box" id="problemDisplay">37 - 12</div>
+            </div>
+
+            <!-- Answer Input Display -->
+            <div style="background: #21262d; padding: 12px; border-radius: 12px; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 2px; max-width: 280px; margin: 0 auto; width: 100%; min-height: 56px;" id="userAnswerBox">_</div>
+
+            <!-- Compact Keypad -->
+            <div class="keypad">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn action" onclick="clearAnswer()">C</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn action" onclick="submitAnswer()">↵</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" onclick="switchTab('arena')"><span>⚔️</span> Arena</button>
+        <button class="nav-item" onclick="switchTab('snac')"><span>🥨</span> Snac</button>
+        <button class="nav-item" onclick="switchTab('quests')"><span>👑</span> Quests</button>
+        <button class="nav-item" onclick="switchTab('feed')"><span>📰</span> Feed</button>
+        <button class="nav-item" onclick="switchTab('menu')"><span>🍀</span> Menu</button>
+    </div>
+
+    <!-- Embedded SVG Logo to prevent any missing file issues -->
+    <svg id="embeddedLogo" style="display:none;" width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <rect width="512" height="512" rx="112" fill="#0e1113"/>
+        <circle cx="256" cy="256" r="140" fill="none" stroke="#a8ff35" stroke-width="28"/>
+        <path d="M200 256 L240 296 L320 216" fill="none" stroke="#a8ff35" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
     <script>
-        /********************************************************************
-         * 1. OFFLINE STATE & CATALOG OF ALL MODES FROM SCREENSHOTS
-         ********************************************************************/
-        const STORAGE_KEY = 'matiks_pro_offline_v2';
-        let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
-            coins: 270,
-            xp: 165,
-            dailyDone: 0,
-            solved: 0,
-            wins: 0,
-            ratings: { math: 1009, memory: 1008, puzzle: 1000, logic: 1000 },
-            history: []
-        };
-
-        function saveState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            updateHeaderUI();
-        }
-
-        const GAME_CATALOG = {
-            math: [
-                { id: 'sprint', title: 'SPRINT\nDUELS', sub: 'RACE TO SOLVE THE MOST IN 1 MINUTE.', rating: 1009, badge: 'MATH' },
-                { id: 'fastest', title: 'FASTEST FINGERS\nDUELS', sub: 'BE THE FIRST TO ANSWER EACH QUESTION.', rating: 1005, badge: 'MATH' },
-                { id: 'anzan', title: 'FLASH ANZAN\nDUELS', sub: 'NUMBERS FLASH, SUM THEM WITH SPEED.', rating: 1000, badge: 'MATH' }
-            ],
-            memory: [
-                { id: 'pinball', title: 'PIN BALL RECALL\nDUELS', sub: 'TRACK THE BALL, RECALL THE EXIT.', rating: 1000, isNew: true },
-                { id: 'mindsnap', title: 'MIND SNAP\nDUELS', sub: 'WHO CAN SNAP FASTER?', rating: 1016 }
-            ],
-            puzzle: [
-                { id: 'sudoku', title: 'SUDOKU\nDUELS', sub: 'FILL THE GRID WITH LOGIC AND SPEED.', rating: 1000 },
-                { id: 'crossmath', title: 'CROSS MATH\nDUELS', sub: 'OUTSOLVE YOUR RIVAL, FILL THE GRID.', rating: 1000 },
-                { id: 'kenken', title: 'KEN KEN\nDUELS', sub: 'LOGIC AND NUMBER COLLIDE IN CAGES.', rating: 1000 },
-                { id: 'mathmaze', title: 'MATH MAZE\nDUELS', sub: 'SOLVE THE MAZE TO WIN.', rating: 1000 }
-            ],
-            logic: [
-                { id: 'ability', title: 'ABILITY\nDUELS', sub: 'SPEED MEETS FULL MATH SKILLSET (MOD %, √, ^).', rating: 1000, badge: 'LOGIC' }
-            ]
-        };
-
-        let activeCategory = 'math';
-        let selectedGameId = 'sprint';
-        let timerSetting = 'timed'; // 'timed' | 'zen'
-
-        function updateHeaderUI() {
-            document.getElementById('header-coins').textContent = state.coins;
-            document.getElementById('header-xp').textContent = `${state.xp} XP`;
-            document.getElementById('daily-progress-text').textContent = `${Math.min(7, state.dailyDone)}/7`;
-            document.getElementById('rating-math').textContent = state.ratings.math;
-            document.getElementById('rating-memory').textContent = state.ratings.memory;
-            document.getElementById('rating-puzzle').textContent = state.ratings.puzzle;
-            document.getElementById('rating-logic').textContent = state.ratings.logic;
-            document.getElementById('stat-solved').textContent = state.solved;
-            document.getElementById('stat-wins').textContent = state.wins;
-
-            const histEl = document.getElementById('history-container');
-            if (state.history.length > 0) {
-                histEl.innerHTML = state.history.slice(0, 10).map(h => `
-                    <div class="flex justify-between items-center bg-[#121215] px-3 py-2 rounded-xl border border-[#232329]">
-                        <span class="font-bold text-white uppercase">${h.mode}</span>
-                        <span class="font-mono-num text-[#22C55E]">Score: ${h.score}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function selectCategory(cat) {
-            activeCategory = cat;
-            const colors = {
-                math: '#EAB308',
-                memory: '#38BDF8',
-                puzzle: '#22C55E',
-                logic: '#EC4899'
-            };
-
-            ['math', 'memory', 'puzzle', 'logic'].forEach(c => {
-                const box = document.getElementById(`tab-box-${c}`);
-                const lbl = document.getElementById(`tab-label-${c}`);
-                if (c === cat) {
-                    box.style.borderColor = colors[c];
-                    box.style.backgroundColor = `${colors[c]}18`;
-                    lbl.style.color = colors[c];
-                    lbl.classList.add('font-extrabold');
-                } else {
-                    box.style.borderColor = '#27272A';
-                    box.style.backgroundColor = '#18181B';
-                    lbl.style.color = '#A1A1AA';
-                    lbl.classList.remove('font-extrabold');
-                }
-            });
-
-            const container = document.getElementById('mode-cards-container');
-            const list = GAME_CATALOG[cat] || [];
-            const arrowColor = colors[cat];
-
-            container.innerHTML = list.map(item => `
-                <div onclick="openLobby('${item.id}')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
-                    ${item.isNew ? `<span class="absolute -top-2.5 right-4 px-3 py-0.5 rounded-full bg-[#1E1B2E] border border-[#A855F7] text-white text-[10px] font-extrabold uppercase">NEW</span>` : ''}
-                    <div class="mb-2">
-                        <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
-                            Rating: <span style="color:${arrowColor}">${state.ratings[cat]}</span>
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="font-display text-2xl font-extrabold text-white whitespace-pre-line leading-none tracking-tight">${item.title}</h2>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mt-2.5">${item.sub}</p>
-                        </div>
-                        <span class="text-sm font-black" style="color:${arrowColor}">▸</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function showView(viewId) {
-            ['arena', 'lobby', 'stats'].forEach(v => {
-                document.getElementById(`view-${v}`).classList.add('hidden');
-            });
-            document.getElementById(`view-${viewId}`).classList.remove('hidden');
-            updateHeaderUI();
-        }
-
-        function openLobby(gameId) {
-            selectedGameId = gameId;
-            let found = null;
-            Object.keys(GAME_CATALOG).forEach(k => {
-                GAME_CATALOG[k].forEach(g => { if (g.id === gameId) found = g; });
-            });
-            if (!found) return;
-            document.getElementById('lobby-title').textContent = found.title.replace('\n', ' ');
-            document.getElementById('lobby-desc').textContent = found.sub;
-            showView('lobby');
-        }
-
-        function setTimerMode(m) {
-            timerSetting = m;
-            document.getElementById('timer-btn-timed').className = m === 'timed'
-                ? 'py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#EAB308] bg-[#EAB308]/10 text-[#EAB308]'
-                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400';
-            document.getElementById('timer-btn-zen').className = m === 'zen'
-                ? 'py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]'
-                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400';
-        }
-
-        /********************************************************************
-         * 2. UNIFIED SINGLE-SCREEN GAME ENGINE (ZERO SCROLLING)
-         ********************************************************************/
-        let gameTimer = null;
-        let botTimer = null;
-        let timeLeft = 120;
-        let userScore = 0;
-        let botScore = 0;
-        let withBot = true;
-        let currentHintText = '';
-
-        // Arithmetic / Ability state
-        let mathProblem = null;
-        let mathInput = '';
-
-        // Sudoku / KenKen state
-        let gridSize = 6;
-        let puzzleSolution = [];
-        let puzzleBoard = [];
-        let puzzleFixed = [];
-        let selectedCell = 0;
-        let moveHistory = [];
-
-        // Cross Math state
-        let crossMathState = null;
-
-        // Math Maze state
-        let mazeState = null;
-
-        // Pinball Recall state
-        let pinballState = null;
-
-        // Mind Snap state
-        let snapState = null;
-
-        function launchSelectedGame(vsBot) {
-            withBot = vsBot;
-            userScore = 0;
-            botScore = 0;
-            currentHintText = '';
-            document.getElementById('duel-player-score').textContent = '0';
-            document.getElementById('duel-bot-score').textContent = '0';
-            document.getElementById('duel-hint-toast').textContent = '';
-            document.getElementById('duel-player-rating').textContent = state.ratings[activeCategory];
-
-            document.getElementById('active-game-overlay').classList.remove('hidden');
-
-            // Setup Timer
-            clearInterval(gameTimer);
-            clearInterval(botTimer);
-            if (timerSetting === 'zen') {
-                document.getElementById('duel-timer').textContent = '∞ ZEN';
-            } else {
-                timeLeft = (selectedGameId === 'sprint' || selectedGameId === 'ability') ? 60 : 120;
-                updateTimerDisplay();
-                gameTimer = setInterval(() => {
-                    timeLeft--;
-                    updateTimerDisplay();
-                    if (timeLeft <= 0) endActiveGame();
-                }, 1000);
-            }
-
-            if (withBot) {
-                const botIntervalMs = (selectedGameId === 'sudoku' || selectedGameId === 'kenken') ? 18000 : 4500;
-                botTimer = setInterval(() => {
-                    if (Math.random() < 0.8) {
-                        botScore += (selectedGameId === 'ability' || selectedGameId === 'sprint') ? 5 : 1;
-                        document.getElementById('duel-bot-score').textContent = botScore;
-                    }
-                }, botIntervalMs);
-            }
-
-            // Route to specific game builder
-            if (['sprint', 'fastest', 'anzan', 'ability'].includes(selectedGameId)) {
-                setupCompactKeyboardGame();
-            } else if (selectedGameId === 'sudoku') {
-                setupSudoku6x6();
-            } else if (selectedGameId === 'crossmath') {
-                setupCrossMath();
-            } else if (selectedGameId === 'kenken') {
-                setupKenKen4x4();
-            } else if (selectedGameId === 'mathmaze') {
-                setupMathMaze();
-            } else if (selectedGameId === 'pinball') {
-                setupPinballRecall();
-            } else if (selectedGameId === 'mindsnap') {
-                setupMindSnap();
-            }
-        }
-
-        function updateTimerDisplay() {
-            const m = Math.floor(timeLeft / 60);
-            const s = String(timeLeft % 60).padStart(2, '0');
-            document.getElementById('duel-timer').textContent = `${m}:${s}`;
-        }
-
-        function triggerFreeHint() {
-            document.getElementById('duel-hint-toast').textContent = currentHintText || '💡 Check target row/column!';
-        }
-
-        function addScore(pts = 1) {
-            userScore += pts;
-            state.solved++;
-            state.xp += 5;
-            document.getElementById('duel-player-score').textContent = userScore;
-        }
-
-        /********************************************************************
-         * MODE A: 4x4 COMPACT KEYBOARD GAMES (Sprint, Ability Mod %, Anzan)
-         * Matches Screenshot 7 exactly!
-         ********************************************************************/
-        function setupCompactKeyboardGame() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-
-            stage.innerHTML = `
-                <div class="flex flex-col items-center justify-center w-full max-w-xs text-center">
-                    <div id="math-cat-pill" class="px-4 py-1 rounded-lg bg-[#222227] border border-[#32323A] text-[11px] font-extrabold tracking-widest uppercase text-zinc-200 mb-3">
-                        REMAINDER / MOD
-                    </div>
-                    <div id="math-question-display" class="font-display text-4xl sm:text-5xl font-extrabold text-white tracking-tight my-2">
-                        66 % 3
-                    </div>
-                </div>
-                <div class="w-full max-w-xs mt-auto mb-2">
-                    <div class="text-[10px] font-extrabold tracking-widest uppercase text-zinc-500 text-center mb-1.5">
-                        TYPE OUT YOUR ANSWER
-                    </div>
-                    <div class="w-full h-12 rounded-xl bg-[#262629] border border-[#3A3A42] flex items-center justify-center font-mono-num text-2xl font-extrabold text-white" id="math-input-box">
-                    </div>
-                </div>
-            `;
-
-            // Exact 4x4 Compact Keyboard from Screenshot 7
-            controls.innerHTML = `
-                <div class="grid grid-cols-4 gap-1.5">
-                    <button onclick="typeMathKey('1')" class="key-4x4">1</button>
-                    <button onclick="typeMathKey('2')" class="key-4x4">2</button>
-                    <button onclick="typeMathKey('3')" class="key-4x4">3</button>
-                    <button onclick="typeMathKey('-')" class="key-4x4">-</button>
-
-                    <button onclick="typeMathKey('4')" class="key-4x4">4</button>
-                    <button onclick="typeMathKey('5')" class="key-4x4">5</button>
-                    <button onclick="typeMathKey('6')" class="key-4x4">6</button>
-                    <button onclick="typeMathKey('/')" class="key-4x4">/</button>
-
-                    <button onclick="typeMathKey('7')" class="key-4x4">7</button>
-                    <button onclick="typeMathKey('8')" class="key-4x4">8</button>
-                    <button onclick="typeMathKey('9')" class="key-4x4">9</button>
-                    <button onclick="typeMathKey('C')" class="key-4x4 font-bold">C</button>
-
-                    <button onclick="typeMathKey('.')" class="key-4x4">.</button>
-                    <button onclick="typeMathKey('0')" class="key-4x4">0</button>
-                    <button onclick="typeMathKey('space')" class="key-4x4 text-sm">space</button>
-                    <button onclick="typeMathKey('BACK')" class="key-4x4 text-base">⌫</button>
-                </div>
-            `;
-
-            nextCompactMathQuestion();
-        }
-
-        function rand(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function nextCompactMathQuestion() {
-            mathInput = '';
-            const box = document.getElementById('math-input-box');
-            if (box) box.textContent = '';
-
-            if (selectedGameId === 'anzan') {
-                const n1 = rand(11, 35), n2 = rand(12, 29), n3 = rand(10, 25);
-                mathProblem = { q: `${n1} + ${n2} + ${n3}`, ans: String(n1 + n2 + n3), tag: 'FLASH ANZAN SUM' };
-                currentHintText = `💡 (${n1}+${n2}) = ${n1+n2}, + ${n3} = ${n1+n2+n3}`;
-            } else if (selectedGameId === 'ability') {
-                const types = ['mod', 'mod', 'sqrt', 'power', 'arith'];
-                const pick = types[rand(0, types.length - 1)];
-                if (pick === 'mod') {
-                    const b = rand(3, 12);
-                    const a = rand(20, 95);
-                    mathProblem = { q: `${a} % ${b}`, ans: String(a % b), tag: 'REMAINDER / MOD' };
-                    currentHintText = `💡 ${b} × ${Math.floor(a/b)} = ${b*Math.floor(a/b)}, Remainder = ${a % b}`;
-                } else if (pick === 'sqrt') {
-                    const r = rand(4, 16);
-                    mathProblem = { q: `√${r * r}`, ans: String(r), tag: 'SQUARE ROOT' };
-                    currentHintText = `💡 ${r} × ${r} = ${r*r}`;
-                } else if (pick === 'power') {
-                    const base = rand(2, 9);
-                    mathProblem = { q: `${base}² + 5`, ans: String(base * base + 5), tag: 'EXPONENTS' };
-                    currentHintText = `💡 ${base}² = ${base*base}, + 5 = ${base*base+5}`;
-                } else {
-                    const a = rand(25, 85), b = rand(12, 49);
-                    mathProblem = { q: `${a} - ${b}`, ans: String(a - b), tag: 'MENTAL SUBTRACTION' };
-                    currentHintText = `💡 Answer is ${a - b}`;
-                }
-            } else {
-                const ops = ['+', '-', '×', '÷'];
-                const op = ops[rand(0, 3)];
-                if (op === '+') {
-                    const a = rand(14, 68), b = rand(13, 55);
-                    mathProblem = { q: `${a} + ${b}`, ans: String(a + b), tag: 'ADDITION SPRINT' };
-                } else if (op === '-') {
-                    const a = rand(35, 95), b = rand(11, a - 5);
-                    mathProblem = { q: `${a} - ${b}`, ans: String(a - b), tag: 'SUBTRACTION SPRINT' };
-                } else if (op === '×') {
-                    const a = rand(4, 14), b = rand(3, 12);
-                    mathProblem = { q: `${a} × ${b}`, ans: String(a * b), tag: 'MULTIPLICATION' };
-                } else {
-                    const b = rand(3, 12), ans = rand(3, 15);
-                    mathProblem = { q: `${b * ans} ÷ ${b}`, ans: String(ans), tag: 'DIVISION' };
-                }
-                currentHintText = `💡 Answer: ${mathProblem.ans}`;
-            }
-
-            document.getElementById('math-cat-pill').textContent = mathProblem.tag;
-            document.getElementById('math-question-display').textContent = mathProblem.q;
-        }
-
-        function typeMathKey(k) {
-            if (k === 'C') {
-                mathInput = '';
-            } else if (k === 'BACK') {
-                mathInput = mathInput.slice(0, -1);
-            } else if (k === 'space') {
-                return;
-            } else if (mathInput.length < 7) {
-                mathInput += k;
-            }
-            const box = document.getElementById('math-input-box');
-            if (box) box.textContent = mathInput;
-
-            if (mathProblem && mathInput === mathProblem.ans) {
-                addScore(selectedGameId === 'ability' ? 5 : 1);
-                nextCompactMathQuestion();
-            }
-        }
-
-        /********************************************************************
-         * MODE B: SUDOKU DUELS (6x6 Grid with 2x3 Boxes - Screenshot 2)
-         ********************************************************************/
-        function setupSudoku6x6() {
-            // Valid 6x6 Sudoku base solution (2x3 sub-boxes)
-            const base = [
-                3, 1, 2, 4, 6, 5,
-                4, 3, 5, 2, 6, 1, // wait let's use a 100% valid 6x6 Latin/Sudoku grid:
-            ];
-            const valid6x6 = [
-                6, 1, 2, 4, 3, 5,
-                3, 4, 5, 2, 6, 1,
-                2, 5, 6, 3, 1, 4,
-                1, 3, 4, 6, 5, 2,
-                4, 2, 1, 5, 4, 6, // let's ensure strict 6x6 validity:
-            ];
-            const canonical6x6 = [
-                6, 1, 2, 4, 3, 5,
-                4, 3, 5, 2, 6, 1,
-                2, 5, 6, 3, 1, 4,
-                1, 4, 3, 6, 5, 2,
-                3, 2, 1, 5, 4, 6,
-                5, 6, 4, 1, 2, 3
-            ];
-
-            puzzleSolution = [...canonical6x6];
-            puzzleBoard = puzzleSolution.map((val, idx) => (idx % 2 === 0 || idx % 5 === 0) ? val : 0);
-            puzzleBoard[0] = 0; // Top-left selected like Screenshot 2
-            puzzleFixed = puzzleBoard.map(v => v !== 0);
-            selectedCell = 0;
-            moveHistory = [];
-
-            renderSudokuScreen();
-        }
-
-        function renderSudokuScreen() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-
-            currentHintText = `💡 Selected cell value is ${puzzleSolution[selectedCell]}`;
-
-            let cellsHtml = '';
-            for (let i = 0; i < 36; i++) {
-                const r = Math.floor(i / 6);
-                const c = i % 6;
-                const val = puzzleBoard[i];
-                const isSelected = i === selectedCell;
-                const thickRight = (c === 2) ? 'border-r-2 border-r-[#22C55E]' : 'border-r border-r-[#1E3A29]';
-                const thickBottom = (r === 1 || r === 3) ? 'border-b-2 border-b-[#22C55E]' : 'border-b border-b-[#1E3A29]';
-                const bgClass = isSelected ? 'bg-[#22C55E] text-black font-black' : (puzzleFixed[i] ? 'bg-[#12241A] text-zinc-400' : 'bg-[#0F1914] text-white');
-
-                cellsHtml += `
-                    <div onclick="selectSudokuCell(${i})" class="aspect-square flex items-center justify-center font-mono-num text-lg font-bold cursor-pointer ${thickRight} ${thickBottom} ${bgClass}">
-                        ${val !== 0 ? val : ''}
-                    </div>
-                `;
-            }
-
-            stage.innerHTML = `
-                <div class="w-full max-w-[310px] aspect-square border-2 border-[#22C55E] rounded-sm grid grid-cols-6 overflow-hidden shadow-lg">
-                    ${cellsHtml}
-                </div>
-            `;
-
-            controls.innerHTML = `
-                <div class="max-w-[310px] mx-auto space-y-2.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <button onclick="undoPuzzleMove()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↺</button>
-                        <button onclick="triggerFreeHint()" class="w-11 h-10 rounded-xl bg-[#13251B] border border-[#22C55E] text-[#22C55E] font-bold">✎</button>
-                        <button onclick="clearPuzzleCell()" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold tracking-wider uppercase text-zinc-300">☰ CLEAR</button>
-                        <button onclick="setupSudoku6x6()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↻</button>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2.5 px-4">
-                        ${[1,2,3,4,5,6].map(n => `
-                            <button onclick="inputSudokuNumber(${n})" class="puzzle-num-btn h-11 text-lg">${n}</button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function selectSudokuCell(idx) {
-            selectedCell = idx;
-            renderSudokuScreen();
-        }
-
-        function inputSudokuNumber(n) {
-            if (puzzleFixed[selectedCell]) return;
-            moveHistory.push({ idx: selectedCell, prev: puzzleBoard[selectedCell] });
-            puzzleBoard[selectedCell] = n;
-
-            if (n === puzzleSolution[selectedCell]) {
-                addScore(2);
-            }
-            renderSudokuScreen();
-
-            // Check if complete
-            if (puzzleBoard.every((v, i) => v === puzzleSolution[i])) {
-                addScore(20);
-                setTimeout(() => endActiveGame('SUDOKU SOLVED!'), 300);
-            }
-        }
-
-        function clearPuzzleCell() {
-            if (!puzzleFixed[selectedCell]) {
-                puzzleBoard[selectedCell] = 0;
-                renderSudokuScreen();
-            }
-        }
-
-        function undoPuzzleMove() {
-            const last = moveHistory.pop();
-            if (last) {
-                puzzleBoard[last.idx] = last.prev;
-                selectedCell = last.idx;
-                renderSudokuScreen();
-            }
-        }
-
-        /********************************************************************
-         * MODE C: CROSS MATH DUELS (Screenshot 3)
-         ********************************************************************/
-        const CROSS_PUZZLES = [
-            {
-                // Matches Screenshot 3 layout!
-                // Row 0: [152] ÷ 38 = 4
-                // OpRow:   +      -
-                // Row 2: [16]  -  5 = 11
-                // EqRow:   =      =
-                // Row 4:  168    33
-                blanks: { '0,0': 152, '2,0': 16 },
-                userVals: { '0,0': null, '2,0': null },
-                selectedKey: '0,0',
-                choices: [16, 152],
-                grid: [
-                    [{ blank: '0,0' }, { t: '÷' }, { t: '38' }, { t: '=' }, { t: '4' }],
-                    [{ t: '+' }, null, { t: '-' }, null, null],
-                    [{ blank: '2,0' }, { t: '-' }, { t: '5' }, { t: '=' }, { t: '11' }],
-                    [{ t: '=' }, null, { t: '=' }, null, null],
-                    [{ t: '168' }, null, { t: '33' }, null, null]
-                ]
-            },
-            {
-                blanks: { '0,0': 45, '2,0': 12 },
-                userVals: { '0,0': null, '2,0': null },
-                selectedKey: '0,0',
-                choices: [12, 45],
-                grid: [
-                    [{ blank: '0,0' }, { t: '÷' }, { t: '9' }, { t: '=' }, { t: '5' }],
-                    [{ t: '+' }, null, { t: '+' }, null, null],
-                    [{ blank: '2,0' }, { t: '-' }, { t: '4' }, { t: '=' }, { t: '8' }],
-                    [{ t: '=' }, null, { t: '=' }, null, null],
-                    [{ t: '57' }, null, { t: '13' }, null, null]
-                ]
-            }
-        ];
-        let crossIndex = 0;
-
-        function setupCrossMath() {
-            const template = CROSS_PUZZLES[crossIndex % CROSS_PUZZLES.length];
-            crossMathState = JSON.parse(JSON.stringify(template));
-            renderCrossMath();
-        }
-
-        function renderCrossMath() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-            const st = crossMathState;
-
-            currentHintText = `💡 ${st.selectedKey} needs ${st.blanks[st.selectedKey]}`;
-
-            let html = '<div class="grid grid-cols-5 gap-1.5 w-full max-w-[280px]">';
-            for (let r = 0; r < 5; r++) {
-                for (let c = 0; c < 5; c++) {
-                    const cell = st.grid[r][c];
-                    if (!cell) {
-                        html += `<div class="aspect-square"></div>`;
-                    } else if (cell.blank) {
-                        const k = cell.blank;
-                        const val = st.userVals[k];
-                        const isSel = st.selectedKey === k;
-                        html += `
-                            <div onclick="selectCrossBlank('${k}')" class="aspect-square rounded-lg border-2 ${isSel ? 'border-white bg-[#1B4D2E]' : 'border-[#22C55E]/60 bg-[#153823]'} flex items-center justify-center font-mono-num text-base font-extrabold text-white cursor-pointer">
-                                ${val !== null ? val : ''}
-                            </div>
-                        `;
-                    } else {
-                        html += `
-                            <div class="aspect-square rounded-lg bg-[#22C55E] text-black flex items-center justify-center font-mono-num text-base font-extrabold shadow">
-                                ${cell.t}
-                            </div>
-                        `;
-                    }
-                }
-            }
-            html += '</div>';
-            stage.innerHTML = html;
-
-            controls.innerHTML = `
-                <div class="max-w-[290px] mx-auto space-y-3">
-                    <div class="flex items-center justify-between gap-2">
-                        <button onclick="setupCrossMath()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↺</button>
-                        <button onclick="clearCrossBlank()" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
-                        <button onclick="crossIndex++; setupCrossMath();" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↻</button>
-                    </div>
-                    <div class="flex items-center justify-center gap-3">
-                        ${st.choices.map(num => `
-                            <button onclick="placeCrossChoice(${num})" class="puzzle-num-btn w-16 h-12 text-base">${num}</button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function selectCrossBlank(key) {
-            crossMathState.selectedKey = key;
-            renderCrossMath();
-        }
-
-        function clearCrossBlank() {
-            crossMathState.userVals[crossMathState.selectedKey] = null;
-            renderCrossMath();
-        }
-
-        function placeCrossChoice(num) {
-            const st = crossMathState;
-            st.userVals[st.selectedKey] = num;
-
-            // Move selection to next empty blank
-            const keys = Object.keys(st.blanks);
-            const nextEmpty = keys.find(k => st.userVals[k] === null);
-            if (nextEmpty) st.selectedKey = nextEmpty;
-
-            renderCrossMath();
-
-            // Check win
-            if (keys.every(k => st.userVals[k] === st.blanks[k])) {
-                addScore(15);
-                crossIndex++;
-                setTimeout(setupCrossMath, 350);
-            }
-        }
-
-        /********************************************************************
-         * MODE D: KEN KEN DUELS (4x4 Cage Grid - Screenshot 4)
-         ********************************************************************/
-        function setupKenKen4x4() {
-            gridSize = 4;
-            puzzleSolution = [
-                2, 1, 4, 3,
-                4, 3, 2, 1,
-                3, 4, 1, 2,
-                1, 2, 3, 4
-            ];
-            puzzleBoard = new Array(16).fill(0);
-            selectedCell = 0;
-
-            renderKenKenScreen();
-        }
-
-        function renderKenKenScreen() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-
-            const cageLabels = {
-                0: '-1', 2: '4', 3: '3',
-                4: '4', 5: '3', 6: '×2',
-                8: '3', 9: '4', 10: '+3',
-                12: '+3', 14: '3', 15: '4'
-            };
-
-            currentHintText = `💡 Cell answer is ${puzzleSolution[selectedCell]}`;
-
-            let cells = '';
-            for (let i = 0; i < 16; i++) {
-                const isSel = i === selectedCell;
-                const clue = cageLabels[i] || '';
-                const val = puzzleBoard[i];
-                cells += `
-                    <div onclick="selectedCell=${i}; renderKenKenScreen();" class="aspect-square border border-[#22C55E] relative flex items-center justify-center font-mono-num text-xl font-extrabold cursor-pointer ${isSel ? 'bg-[#FEF08A] text-black' : 'bg-[#121316] text-white'}">
-                        <span class="absolute top-0.5 left-1 text-[10px] font-mono-num font-bold ${isSel ? 'text-black' : 'text-zinc-300'}">${clue}</span>
-                        <span>${val !== 0 ? val : ''}</span>
-                    </div>
-                `;
-            }
-
-            stage.innerHTML = `
-                <div class="w-full max-w-[270px] aspect-square border-2 border-[#22C55E] grid grid-cols-4 overflow-hidden">
-                    ${cells}
-                </div>
-            `;
-
-            controls.innerHTML = `
-                <div class="max-w-[280px] mx-auto space-y-2.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <button onclick="puzzleBoard[selectedCell]=0; renderKenKenScreen();" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR CELL</button>
-                    </div>
-                    <div class="grid grid-cols-4 gap-2">
-                        ${[1,2,3,4].map(n => `
-                            <button onclick="inputKenKen(${n})" class="puzzle-num-btn h-12 text-lg">${n}</button>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function inputKenKen(n) {
-            puzzleBoard[selectedCell] = n;
-            if (n === puzzleSolution[selectedCell]) addScore(2);
-            renderKenKenScreen();
-            if (puzzleBoard.every((v, idx) => v === puzzleSolution[idx])) {
-                addScore(20);
-                setTimeout(() => endActiveGame('KENKEN COMPLETED!'), 300);
-            }
-        }
-
-        /********************************************************************
-         * MODE E: MATH MAZE DUELS (Screenshot 5)
-         ********************************************************************/
-        const MAZE_LEVELS = [
-            {
-                target: 11,
-                // 3x3 alternating Number / Operator nodes like Screenshot 5
-                // (0,0)=5, (0,1)=+, (0,2)=1
-                // (1,0)=-, (1,1)=1, (1,2)=/
-                // (2,0)=3, (2,1)=+, (2,2)=9
-                // Valid path: 5 (0,0) -> - (1,0) -> 3 (2,0) -> + (2,1) -> 9 (2,2) => 5 - 3 + 9 = 11!
-                nodes: [
-                    { t: 'num', v: 5 }, { t: 'op', v: '+' }, { t: 'num', v: 1 },
-                    { t: 'op', v: '-' }, { t: 'num', v: 1 }, { t: 'op', v: '/' },
-                    { t: 'num', v: 3 }, { t: 'op', v: '+' }, { t: 'num', v: 9 }
-                ],
-                hint: '💡 Path: 5 → (-) → 3 → (+) → 9 = 11'
-            },
-            {
-                target: 14,
-                // Path: 4 -> + -> 3 -> + -> 7 = 14
-                nodes: [
-                    { t: 'num', v: 4 }, { t: 'op', v: '+' }, { t: 'num', v: 2 },
-                    { t: 'op', v: '+' }, { t: 'num', v: 3 }, { t: 'op', v: '×' },
-                    { t: 'num', v: 5 }, { t: 'op', v: '+' }, { t: 'num', v: 7 }
-                ],
-                hint: '💡 Path: 4 → (+) → 3 → (+) → 7 = 14'
-            }
-        ];
-        let mazeIdx = 0;
-
-        function setupMathMaze() {
-            const lvl = MAZE_LEVELS[mazeIdx % MAZE_LEVELS.length];
-            mazeState = {
-                target: lvl.target,
-                nodes: lvl.nodes,
-                path: [0], // starts at index 0 (top-left)
-                hint: lvl.hint
-            };
-            currentHintText = lvl.hint;
-            renderMathMaze();
-        }
-
-        function evaluateMazePath(path, nodes) {
-            let val = nodes[path[0]].v;
-            for (let i = 1; i < path.length - 1; i += 2) {
-                const op = nodes[path[i]].v;
-                const nextNum = nodes[path[i + 1]].v;
-                if (op === '+') val += nextNum;
-                else if (op === '-') val -= nextNum;
-                else if (op === '×') val *= nextNum;
-                else if (op === '/') val = val / nextNum;
-            }
-            return val;
-        }
-
-        function renderMathMaze() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-            const st = mazeState;
-
-            let gridHtml = '';
-            st.nodes.forEach((n, idx) => {
-                const inPath = st.path.includes(idx);
-                const isStart = idx === 0;
-                const isEnd = idx === 8;
-                const shape = (isStart || isEnd) ? 'rounded-2xl' : 'rounded-full';
-                const bg = inPath ? 'bg-[#FEF08A] text-black ring-2 ring-white' : 'bg-[#22C55E] text-black';
-
-                gridHtml += `
-                    <div class="flex flex-col items-center justify-center relative">
-                        ${isStart ? `<span class="mb-1 px-2.5 py-0.5 rounded-full bg-[#1C1C22] border border-[#FEF08A] text-[9px] font-extrabold uppercase text-white">START</span>` : ''}
-                        <button onclick="tapMazeNode(${idx})" class="w-14 h-14 ${shape} ${bg} font-mono-num text-xl font-extrabold flex items-center justify-center shadow-md active:scale-95 transition">
-                            ${n.v}
-                        </button>
-                        ${isEnd ? `<span class="mt-1 px-2.5 py-0.5 rounded-full bg-[#1C1C22] border border-[#FEF08A] text-[9px] font-extrabold uppercase text-white">END</span>` : ''}
-                    </div>
-                `;
-            });
-
-            stage.innerHTML = `
-                <div class="flex flex-col items-center justify-center">
-                    <div class="text-[11px] font-extrabold uppercase tracking-widest text-zinc-400">⚑ TARGET GOAL</div>
-                    <div class="font-display text-5xl font-extrabold text-[#22C55E] mb-3">${st.target}</div>
-                    <div class="grid grid-cols-3 gap-3.5 items-center">
-                        ${gridHtml}
-                    </div>
-                </div>
-            `;
-
-            controls.innerHTML = `
-                <div class="max-w-[260px] mx-auto flex items-center justify-between gap-2 pb-2">
-                    <button onclick="mazeState.path.pop(); if(mazeState.path.length===0) mazeState.path=[0]; renderMathMaze();" class="w-12 h-11 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-300 font-bold">↺</button>
-                    <button onclick="mazeState.path=[0]; renderMathMaze();" class="flex-1 h-11 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
-                    <button onclick="mazeIdx++; setupMathMaze();" class="w-12 h-11 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-300 font-bold">↻</button>
-                </div>
-            `;
-        }
-
-        function tapMazeNode(idx) {
-            const st = mazeState;
-            const last = st.path[st.path.length - 1];
-            if (idx === last) return;
-
-            const r1 = Math.floor(last / 3), c1 = last % 3;
-            const r2 = Math.floor(idx / 3), c2 = idx % 3;
-            if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return; // Must be orthogonal neighbor
-            if (st.path.includes(idx)) return;
-
-            st.path.push(idx);
-            renderMathMaze();
-
-            if (idx === 8) {
-                const res = evaluateMazePath(st.path, st.nodes);
-                if (res === st.target) {
-                    addScore(15);
-                    mazeIdx++;
-                    setTimeout(setupMathMaze, 350);
-                } else {
-                    setTimeout(() => { st.path = [0]; renderMathMaze(); }, 400);
-                }
-            }
-        }
-
-        /********************************************************************
-         * MODE F: PIN BALL RECALL DUELS (Memory - Screenshot 8)
-         ********************************************************************/
-        function setupPinballRecall() {
-            // 3x3 grid with 2 bumpers (\ or /), ball enters from Left Row 1
-            const bumperRow = rand(0, 2);
-            const bumperCol = rand(0, 2);
-            const slash = Math.random() < 0.5 ? '/' : '\\';
-            // If ball enters at (bumperRow, 0) moving right -> hits bumper at (bumperRow, bumperCol)
-            // If '/', goes UP (exit Top at col bumperCol); if '\', goes DOWN (exit Bottom at col bumperCol)
-            const exitLabel = slash === '/' ? `TOP-${bumperCol + 1}` : `BOT-${bumperCol + 1}`;
-
-            pinballState = { bumperRow, bumperCol, slash, exitLabel, phase: 'memorize' };
-            currentHintText = `💡 Exit is ${exitLabel}`;
-            renderPinball();
-
-            setTimeout(() => {
-                if (pinballState) {
-                    pinballState.phase = 'guess';
-                    renderPinball();
-                }
-            }, 2200);
-        }
-
-        function renderPinball() {
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-            const st = pinballState;
-
-            let cells = '';
-            for (let r = 0; r < 3; r++) {
-                for (let c = 0; c < 3; c++) {
-                    const hasBumper = (r === st.bumperRow && c === st.bumperCol);
-                    const showIt = st.phase === 'memorize' && hasBumper;
-                    cells += `
-                        <div class="w-16 h-16 rounded-xl bg-[#161922] border border-[#38BDF8]/40 flex items-center justify-center font-mono-num text-2xl font-extrabold text-[#38BDF8]">
-                            ${showIt ? st.slash : ''}
-                        </div>
-                    `;
-                }
-            }
-
-            stage.innerHTML = `
-                <div class="text-center space-y-3">
-                    <span class="px-3 py-1 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-xs font-extrabold uppercase">
-                        ${st.phase === 'memorize' ? '👀 MEMORIZE DEFLECTOR!' : '🎯 WHERE DOES THE BALL EXIT?'}
-                    </span>
-                    <div class="text-xs text-zinc-300 font-bold">Ball enters from <span class="text-[#EAB308]">LEFT ROW ${st.bumperRow + 1} ➜</span></div>
-                    <div class="grid grid-cols-3 gap-2 mx-auto w-fit p-3 rounded-2xl bg-[#11131A] border-2 border-[#38BDF8]">
-                        ${cells}
-                    </div>
-                </div>
-            `;
-
-            const exits = ['TOP-1', 'TOP-2', 'TOP-3', 'BOT-1', 'BOT-2', 'BOT-3'];
-            controls.innerHTML = `
-                <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto pb-2">
-                    ${exits.map(ex => `
-                        <button onclick="guessPinball('${ex}')" class="py-3 rounded-xl bg-[#181B24] border border-[#38BDF8] text-xs font-mono-num font-extrabold text-white active:scale-95">${ex}</button>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function guessPinball(ex) {
-            if (pinballState.phase === 'memorize') return;
-            if (ex === pinballState.exitLabel) {
-                addScore(10);
-            }
-            setupPinballRecall();
-        }
-
-        /********************************************************************
-         * MODE G: MIND SNAP DUELS (Memory - Screenshot 8)
-         ********************************************************************/
-        const SNAP_SYMBOLS = ['⚡', '🔥', '💎', '🚀', '🍀'];
-        function setupMindSnap() {
-            const prev = SNAP_SYMBOLS[rand(0, SNAP_SYMBOLS.length - 1)];
-            const curr = Math.random() < 0.45 ? prev : SNAP_SYMBOLS[rand(0, SNAP_SYMBOLS.length - 1)];
-            snapState = { prev, curr };
-            currentHintText = prev === curr ? '💡 MATCH! Tap SNAP!' : '💡 Different! Tap NEXT';
-
-            const stage = document.getElementById('game-stage');
-            const controls = document.getElementById('game-controls');
-
-            stage.innerHTML = `
-                <div class="flex flex-col items-center gap-4">
-                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#38BDF8]">DO THE CARDS MATCH?</div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-28 h-36 rounded-2xl bg-[#18181D] border-2 border-zinc-700 flex flex-col items-center justify-center">
-                            <span class="text-[10px] text-zinc-500 uppercase font-bold mb-2">PREVIOUS</span>
-                            <span class="text-5xl">${prev}</span>
-                        </div>
-                        <div class="w-28 h-36 rounded-2xl bg-[#18181D] border-2 border-[#38BDF8] flex flex-col items-center justify-center">
-                            <span class="text-[10px] text-[#38BDF8] uppercase font-bold mb-2">CURRENT</span>
-                            <span class="text-5xl">${curr}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            controls.innerHTML = `
-                <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto pb-2">
-                    <button onclick="answerSnap(false)" class="py-4 rounded-2xl bg-[#26262C] text-white font-display font-extrabold text-sm uppercase">NEXT Card</button>
-                    <button onclick="answerSnap(true)" class="py-4 rounded-2xl bg-[#38BDF8] text-black font-display font-extrabold text-sm uppercase">⚡ SNAP!</button>
-                </div>
-            `;
-        }
-
-        function answerSnap(saidMatch) {
-            const isMatch = snapState.prev === snapState.curr;
-            if (saidMatch === isMatch) addScore(5);
-            setupMindSnap();
-        }
-
-        /********************************************************************
-         * END GAME & RESULTS HANDLING
-         ********************************************************************/
-        function exitActiveGame() {
-            clearInterval(gameTimer);
-            clearInterval(botTimer);
-            document.getElementById('active-game-overlay').classList.add('hidden');
-            saveState();
-        }
-
-        function endActiveGame(customTitle) {
-            clearInterval(gameTimer);
-            clearInterval(botTimer);
-
-            state.dailyDone = Math.min(7, state.dailyDone + 1);
-            if (userScore >= botScore) {
-                state.wins++;
-                state.ratings[activeCategory] += 8;
-            }
-            state.history.unshift({ mode: selectedGameId, score: userScore });
-            saveState();
-
-            document.getElementById('active-game-overlay').classList.add('hidden');
-            document.getElementById('modal-title').textContent = customTitle || (userScore >= botScore ? 'YOU WON THE DUEL!' : 'BOT WON THIS ROUND');
-            document.getElementById('modal-user-score').textContent = userScore;
-            document.getElementById('modal-bot-score').textContent = botScore;
-            document.getElementById('results-modal').classList.remove('hidden');
-        }
-
-        function closeResults() {
-            document.getElementById('results-modal').classList.add('hidden');
-            showView('arena');
-        }
-
-        function replayCurrentGame() {
-            document.getElementById('results-modal').classList.add('hidden');
-            launchSelectedGame(withBot);
-        }
-
-        function resetCareerData() {
-            localStorage.removeItem(STORAGE_KEY);
-            location.reload();
-        }
-
-        /********************************************************************
-         * 3. GITHUB ACTIONS APK BUILDER GENERATOR (1-CLICK DOWNLOADS)
-         ********************************************************************/
-        const GITHUB_WORKFLOW_YAML = `name: Build Android APK
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-
-jobs:
-  build-apk:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Setup Java JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Install Capacitor & Android Platform
-        run: |
-          mkdir -p www
-          cp index.html www/index.html || true
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android || true
-          npx cap sync android
-
-      - name: Build Debug APK with Gradle
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
-
-      - name: Upload Ready-to-Install APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Matiks-Offline-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk`;
-
-        const PACKAGE_JSON = JSON.stringify({
-            name: "matiks-offline-arena",
-            version: "2.0.0",
-            description: "Offline Mental Math & Puzzle Duels App",
-            scripts: {
-                "sync": "npx cap sync"
-            },
-            dependencies: {
-                "@capacitor/android": "^6.0.0",
-                "@capacitor/cli": "^6.0.0",
-                "@capacitor/core": "^6.0.0"
-            }
-        }, null, 2);
-
-        const CAPACITOR_CONFIG = JSON.stringify({
-            appId: "com.matiks.offline.arena",
-            appName: "Matiks Offline",
-            webDir: "www",
-            bundledWebRuntime: false
-        }, null, 2);
-
-        function openApkModal() {
-            document.getElementById('yaml-preview').textContent = GITHUB_WORKFLOW_YAML;
-            document.getElementById('apk-modal').classList.remove('hidden');
-        }
-
-        function closeApkModal() {
-            document.getElementById('apk-modal').classList.add('hidden');
-        }
-
-        function copyWorkflowYaml() {
-            const ta = document.createElement('textarea');
-            ta.value = GITHUB_WORKFLOW_YAML;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            document.getElementById('copy-yaml-btn').textContent = 'COPIED ✓';
-            setTimeout(() => { document.getElementById('copy-yaml-btn').textContent = 'COPY CODE'; }, 2000);
-        }
-
-        function downloadRepoFile(filename) {
-            let content = '';
-            if (filename === 'index.html') {
-                content = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-            } else if (filename === 'package.json') {
-                content = PACKAGE_JSON;
-            } else if (filename === 'capacitor.config.json') {
-                content = CAPACITOR_CONFIG;
-            } else if (filename === 'build-apk.yml') {
-                content = GITHUB_WORKFLOW_YAML;
-            }
-
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Physical Keyboard Support
-        window.addEventListener('keydown', (e) => {
-            if (document.getElementById('active-game-overlay').classList.contains('hidden')) return;
-            if (['sprint', 'fastest', 'anzan', 'ability'].includes(selectedGameId)) {
-                if ((e.key >= '0' && e.key <= '9') || e.key === '-' || e.key === '/' || e.key === '.') {
-                    typeMathKey(e.key);
-                } else if (e.key === 'Backspace') {
-                    typeMathKey('BACK');
-                } else if (e.key === 'Escape') {
-                    typeMathKey('C');
-                }
-            }
+        // Set up dynamic favicon/logo from embedded SVG
+        window.addEventListener('DOMContentLoaded', () => {
+            const svgElement = document.getElementById('embeddedLogo');
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+            const blobURL = URL.createObjectURL(svgBlob);
+            
+            let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/svg+xml';
+            link.rel = 'shortcut icon';
+            link.href = blobURL;
+            document.getElementsByTagName('head')[0].appendChild(link);
         });
 
-        window.onload = () => {
-            updateHeaderUI();
-            selectCategory('math');
-        };
-    </script>
+        // Hardware back button & side swipe gesture support
+        window.addEventListener('popstate', (event) => {
+            goHome();
+        });
 
-</body></html>
+        let currentAnswer = "";
+        let score = 0;
+        let timer = 60;
+        let timerInterval = null;
+
+        function startPlay(gameName, type) {
+            history.pushState({page: "game"}, "", "");
+            
+            document.getElementById('tabArena').style.display = 'none';
+            document.getElementById('bottomNav').style.display = 'none';
+            document.getElementById('gamePlayScreen').style.display = 'flex';
+            document.getElementById('globalBackBtn').style.display = 'flex';
+            document.getElementById('screenTitle').innerText = gameName;
+            
+            score = 0;
+            timer = 60;
+            document.getElementById('currentScore').innerText = score;
+            generateNewProblem();
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timer--;
+                let m = Math.floor(timer / 60);
+                let s = timer % 60;
+                document.getElementById('gameTimer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if(timer <= 0) {
+                    clearInterval(timerInterval);
+                    alert(`Game Over! Your Score: ${score}`);
+                    goHome();
+                }
+            }, 1000);
+        }
+
+        function goHome() {
+            clearInterval(timerInterval);
+            document.getElementById('gamePlayScreen').style.display = 'none';
+            document.getElementById('tabArena').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+            document.getElementById('globalBackBtn').style.display = 'none';
+            document.getElementById('screenTitle').innerText = 'MATIKS OFFLINE';
+        }
+
+        let solutionVal = 0;
+        function generateNewProblem() {
+            let n1 = Math.floor(Math.random() * 40) + 10;
+            let n2 = Math.floor(Math.random() * 30) + 5;
+            let ops = ['+', '-', '×'];
+            let op = ops[Math.floor(Math.random() * ops.length)];
+            
+            if(op === '+') solutionVal = n1 + n2;
+            if(op === '-') solutionVal = n1 - n2;
+            if(op === '×') { n1 = Math.floor(Math.random() * 12) + 2; n2 = Math.floor(Math.random() * 12) + 2; solutionVal = n1 * n2; }
+
+            document.getElementById('problemDisplay').innerText = `${n1} ${op} ${n2}`;
+            currentAnswer = "";
+            document.getElementById('userAnswerBox').innerText = "_";
+        }
+
+        function pressKey(num) {
+            if(currentAnswer.length < 4) {
+                currentAnswer += num;
+                document.getElementById('userAnswerBox').innerText = currentAnswer;
+            }
+        }
+
+        function clearAnswer() {
+            currentAnswer = "";
+            document.getElementById('userAnswerBox').innerText = "_";
+        }
+
+        function submitAnswer() {
+            if(parseInt(currentAnswer) === solutionVal) {
+                score += 10;
+                document.getElementById('currentScore').innerText = score;
+                generateNewProblem();
+            } else {
+                currentAnswer = "";
+                document.getElementById('userAnswerBox').innerText = "❌ Try Again";
+                setTimeout(() => { document.getElementById('userAnswerBox').innerText = "_"; }, 500);
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
