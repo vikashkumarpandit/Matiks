@@ -1,5 +1,4 @@
 name: Build Android APK
-
 on:
   push:
     branches: [ main, master ]
@@ -31,6 +30,21 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap add android || true
           npx cap sync android
+
+      - name: Replace Default Capacitor Icon with Custom Matiks o/o Logo
+        run: |
+          # Remove ALL default Capacitor adaptive XML & WebP icons so Android never shows the blue Capacitor X logo
+          rm -rf android/app/src/main/res/mipmap-anydpi*
+          find android/app/src/main/res/ -name "ic_launcher*.webp" -delete || true
+          find android/app/src/main/res/ -name "ic_launcher*.xml" -delete || true
+          for dir in android/app/src/main/res/mipmap-*; do
+            if [ -d "$dir" ]; then
+              cp matiks-icon.png "$dir/ic_launcher.png"
+              cp matiks-icon.png "$dir/ic_launcher_round.png"
+              cp matiks-foreground.png "$dir/ic_launcher_foreground.png"
+              cp matiks-background.png "$dir/ic_launcher_background.png"
+            fi
+          done
 
       - name: Build Debug APK with Gradle
         run: |
