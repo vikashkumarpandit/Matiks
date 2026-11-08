@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@600;700;800&amp;family=Space+Grotesk:wght@700;800&amp;display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #0E0E10;
-            --bg-card: #18181B;
+            --bg-main: #000000;
+            --bg-card: #09090B;
             --border-subtle: #27272A;
             --neon-lime: #84CC16;
             --puzzle-green: #22C55E;
@@ -26,7 +26,7 @@
         }
 
         html, body {
-            background-color: #070708;
+            background-color: #000000;
             color: #FFFFFF;
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -116,10 +116,10 @@
 <body class="flex items-center justify-center">
 
     <!-- STRICT 100dvh MOBILE SHELL (Never overflows screen height) -->
-    <div id="app-shell" class="w-full max-w-md h-[100dvh] bg-[#0E0E10] sm:border-x sm:border-[#222226] flex flex-col justify-between relative overflow-hidden">
+    <div id="app-shell" class="w-full max-w-md h-[100dvh] bg-[#000000] sm:border-x sm:border-[#222226] flex flex-col justify-between relative overflow-hidden">
 
         <!-- ================= TOP HEADER BAR (Screenshots 1, 6, 8) ================= -->
-        <header id="top-header" class="px-3.5 py-2.5 flex items-center justify-between border-b border-[#1C1C20] bg-[#0E0E10] shrink-0 z-20">
+        <header id="top-header" class="px-3.5 py-2.5 flex items-center justify-between border-b border-[#1C1C20] bg-[#000000] shrink-0 z-20">
             <div class="flex items-center gap-2">
                 <!-- Green Coin / Smart Pill -->
                 <div class="flex items-center gap-1.5 bg-[#1B1B1F] border border-[#2E2E34] px-2.5 py-1 rounded-full">
@@ -152,8 +152,8 @@
             <!-- VIEW 1: ARENA HOME -->
             <section id="view-arena" class="space-y-4 pb-4">
 
-                <!-- Daily Challenges Card (0/7 Bar - Screenshot 6 & 8) -->
-                <div class="bg-[#18181B] border border-[#26262B] rounded-2xl p-3.5">
+                <!-- Daily Challenges Card (Clickable -> Opens Screenshot 16 View) -->
+                <div onclick="showView('daily')" class="cursor-pointer bg-[#0A0A0C] hover:bg-[#121216] border border-[#26262B] rounded-2xl p-3.5 active:scale-[0.99] transition">
                     <div class="flex items-center justify-between mb-2">
                         <div>
                             <h3 class="font-display text-sm font-extrabold uppercase tracking-wide text-white">DAILY CHALLENGES</h3>
@@ -175,44 +175,44 @@
                     <div class="grid grid-cols-4 gap-2.5">
                         <!-- MATH TAB -->
                         <button onclick="selectCategory('math')" id="tab-math" class="flex flex-col items-center group">
-                            <div id="tab-box-math" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#EAB308] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(234, 179, 8); background-color: rgba(234, 179, 8, 0.094);">
+                            <div id="tab-box-math" class="w-full aspect-square rounded-2xl bg-[#0A0A0C] border-2 border-[#EAB308] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(234, 179, 8); background-color: rgba(234, 179, 8, 0.094);">
                                 <div class="w-8 h-8 rounded-lg bg-[#EAB308]/20 border border-[#EAB308] flex items-center justify-center text-[#EAB308] font-mono-num font-black text-sm">
                                     ±×
                                 </div>
-                                <span id="rating-math" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-white border border-[#27272A]">1009</span>
+                                <span id="rating-math" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#000000] text-[10px] font-mono-num font-bold text-white border border-[#27272A]">1009</span>
                             </div>
                             <span id="tab-label-math" class="text-[11px] font-extrabold uppercase tracking-wider mt-1.5 text-[#EAB308]" style="color: rgb(234, 179, 8);">MATH</span>
                         </button>
 
                         <!-- MEMORY TAB -->
                         <button onclick="selectCategory('memory')" id="tab-memory" class="flex flex-col items-center group">
-                            <div id="tab-box-memory" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
+                            <div id="tab-box-memory" class="w-full aspect-square rounded-2xl bg-[#0A0A0C] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
                                 <div class="w-8 h-8 rounded-lg bg-[#38BDF8]/20 border border-[#38BDF8] flex items-center justify-center text-[#38BDF8] font-mono-num font-black text-sm">
                                     ❐
                                 </div>
-                                <span id="rating-memory" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1008</span>
+                                <span id="rating-memory" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#000000] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1008</span>
                             </div>
                             <span id="tab-label-memory" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">MEMORY</span>
                         </button>
 
                         <!-- PUZZLE TAB -->
                         <button onclick="selectCategory('puzzle')" id="tab-puzzle" class="flex flex-col items-center group">
-                            <div id="tab-box-puzzle" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
+                            <div id="tab-box-puzzle" class="w-full aspect-square rounded-2xl bg-[#0A0A0C] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
                                 <div class="w-8 h-8 rounded-lg bg-[#22C55E]/20 border border-[#22C55E] flex items-center justify-center text-[#22C55E] font-mono-num font-black text-sm">
                                     ⊞
                                 </div>
-                                <span id="rating-puzzle" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
+                                <span id="rating-puzzle" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#000000] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
                             </div>
                             <span id="tab-label-puzzle" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">PUZZLE</span>
                         </button>
 
                         <!-- LOGIC TAB -->
                         <button onclick="selectCategory('logic')" id="tab-logic" class="flex flex-col items-center group">
-                            <div id="tab-box-logic" class="w-full aspect-square rounded-2xl bg-[#18181B] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
+                            <div id="tab-box-logic" class="w-full aspect-square rounded-2xl bg-[#0A0A0C] border-2 border-[#27272A] flex flex-col items-center justify-center relative transition-all" style="border-color: rgb(39, 39, 42); background-color: rgb(24, 24, 27);">
                                 <div class="w-8 h-8 rounded-lg bg-[#EC4899]/20 border border-[#EC4899] flex items-center justify-center text-[#EC4899] font-mono-num font-black text-sm">
                                     ◐
                                 </div>
-                                <span id="rating-logic" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#0E0E10] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
+                                <span id="rating-logic" class="mt-1.5 px-2 py-0.2 rounded-full bg-[#000000] text-[10px] font-mono-num font-bold text-zinc-300 border border-[#27272A]">1000</span>
                             </div>
                             <span id="tab-label-logic" class="text-[11px] font-bold uppercase tracking-wider mt-1.5 text-zinc-400" style="color: rgb(161, 161, 170);">LOGIC</span>
                         </button>
@@ -221,7 +221,7 @@
 
                 <!-- DYNAMIC MODE CARDS CONTAINER -->
                 <div id="mode-cards-container" class="space-y-3">
-                <div onclick="openLobby('sprint')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
+                <div onclick="openLobby('sprint')" class="cursor-pointer bg-[#0A0A0C] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
                     
                     <div class="mb-2">
                         <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
@@ -238,7 +238,7 @@ DUELS</h2>
                     </div>
                 </div>
             
-                <div onclick="openLobby('fastest')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
+                <div onclick="openLobby('fastest')" class="cursor-pointer bg-[#0A0A0C] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
                     
                     <div class="mb-2">
                         <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
@@ -255,7 +255,7 @@ DUELS</h2>
                     </div>
                 </div>
             
-                <div onclick="openLobby('anzan')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
+                <div onclick="openLobby('anzan')" class="cursor-pointer bg-[#0A0A0C] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
                     
                     <div class="mb-2">
                         <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
@@ -278,7 +278,7 @@ DUELS</h2>
             <!-- VIEW 2: PRE-GAME MODE LOBBY -->
             <section id="view-lobby" class="hidden space-y-4 pt-1">
                 <div class="flex items-center justify-between">
-                    <button onclick="showView('arena')" class="w-9 h-9 rounded-full bg-[#18181B] border border-[#27272A] flex items-center justify-center text-white font-bold">
+                    <button onclick="showView('arena')" class="w-9 h-9 rounded-full bg-[#0A0A0C] border border-[#27272A] flex items-center justify-center text-white font-bold">
                         ←
                     </button>
                     <span class="text-[11px] font-extrabold uppercase tracking-widest text-zinc-400">OFFLINE DUEL LOBBY</span>
@@ -292,25 +292,20 @@ DUELS</h2>
                 </div>
 
                 <!-- Mode Duration / Timer Selector -->
-                <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5 space-y-3">
+                <div class="bg-[#0A0A0C] border border-[#27272A] rounded-2xl p-3.5 space-y-3">
                     <div>
                         <label class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1.5">TIMER MODE</label>
                         <div class="grid grid-cols-2 gap-2">
                             <button onclick="setTimerMode('timed')" id="timer-btn-timed" class="py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#EAB308] bg-[#EAB308]/10 text-[#EAB308]">⏱ Timed Duel (1-2m)</button>
-                            <button onclick="setTimerMode('zen')" id="timer-btn-zen" class="py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400">∞ No Time Limit</button>
+                            <button onclick="setTimerMode('zen')" id="timer-btn-zen" class="py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#050507] text-zinc-400">∞ No Time Limit</button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1.5">OPPONENT</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="launchSelectedGame(true)" class="py-3.5 rounded-xl bg-[#EAB308] text-black font-display font-extrabold text-xs uppercase tracking-wider shadow active:scale-95 transition">
-                                🤖 PLAY VS BOT
-                            </button>
-                            <button onclick="launchSelectedGame(false)" class="py-3.5 rounded-xl bg-[#22C55E] text-black font-display font-extrabold text-xs uppercase tracking-wider shadow active:scale-95 transition">
-                                ⚡ SOLO PRACTICE
-                            </button>
-                        </div>
+                        <label class="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1.5">START OFFLINE GAME (NO BOT)</label>
+                        <button onclick="launchSelectedGame(false)" class="w-full py-4 rounded-xl bg-[#22C55E] text-black font-display font-extrabold text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
+                            ▶ START SOLO CHALLENGE
+                        </button>
                     </div>
                 </div>
             </section>
@@ -319,16 +314,16 @@ DUELS</h2>
             <section id="view-stats" class="hidden space-y-3 pb-4">
                 <h2 class="font-display text-xl font-extrabold text-white uppercase">OFFLINE CAREER STATS</h2>
                 <div class="grid grid-cols-2 gap-2.5">
-                    <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
+                    <div class="bg-[#0A0A0C] border border-[#27272A] rounded-2xl p-3.5">
                         <span class="text-[10px] font-bold text-zinc-400 uppercase">PROBLEMS SOLVED</span>
                         <div id="stat-solved" class="font-mono-num text-2xl font-extrabold text-[#22C55E] mt-0.5">0</div>
                     </div>
-                    <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
+                    <div class="bg-[#0A0A0C] border border-[#27272A] rounded-2xl p-3.5">
                         <span class="text-[10px] font-bold text-zinc-400 uppercase">BOT DUELS WON</span>
                         <div id="stat-wins" class="font-mono-num text-2xl font-extrabold text-[#EAB308] mt-0.5">0</div>
                     </div>
                 </div>
-                <div class="bg-[#18181B] border border-[#27272A] rounded-2xl p-3.5">
+                <div class="bg-[#0A0A0C] border border-[#27272A] rounded-2xl p-3.5">
                     <div class="text-xs font-extrabold uppercase text-zinc-300 mb-2">RECENT MATCHES</div>
                     <div id="history-container" class="space-y-2 max-h-64 overflow-y-auto text-xs text-zinc-400">
                         No matches recorded yet.
@@ -337,15 +332,115 @@ DUELS</h2>
                 <button onclick="resetCareerData()" class="w-full py-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-extrabold uppercase">Reset All Local Storage Data</button>
             </section>
 
+            <!-- VIEW 4: DAILY CHALLENGES (Screenshot 16) -->
+            <section id="view-daily" class="hidden space-y-3.5 pb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <button onclick="navigateBack()" class="w-9 h-9 rounded-xl bg-[#141418] border border-[#27272E] flex items-center justify-center text-white font-bold active:scale-95">←</button>
+                        <h2 class="font-display text-lg font-extrabold text-white">Daily Challenges</h2>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-[#111C14] border border-[#22C55E]/30 font-mono-num text-[11px] font-bold text-[#4ADE80]">⏱ OFFLINE</span>
+                </div>
+
+                <!-- Sub-tabs: Puzzles 0/4 | Maths 0/2 | Memory 0/1 -->
+                <div class="grid grid-cols-3 border-b border-[#1F1F26] text-xs font-bold text-center">
+                    <div class="py-2 border-b-2 border-[#22C55E] text-white">Puzzles <span class="ml-1 px-1.5 py-0.5 rounded bg-[#18181C] text-[#22C55E] font-mono-num text-[10px]">0/4</span></div>
+                    <div onclick="selectCategory('math'); showView('arena');" class="py-2 text-zinc-400 cursor-pointer">Maths <span class="ml-1 px-1.5 py-0.5 rounded bg-[#18181C] text-zinc-400 font-mono-num text-[10px]">0/2</span></div>
+                    <div onclick="selectCategory('memory'); showView('arena');" class="py-2 text-zinc-400 cursor-pointer">Memory <span class="ml-1 px-1.5 py-0.5 rounded bg-[#18181C] text-zinc-400 font-mono-num text-[10px]">0/1</span></div>
+                </div>
+
+                <!-- 0/4 Progress Banner -->
+                <div class="bg-[#0A0A0C] border border-[#222228] rounded-2xl p-4 text-center space-y-2">
+                    <div class="font-display text-3xl font-extrabold text-[#22C55E]"><span id="daily-puz-count">0</span><span class="text-[#15803D]">/4</span></div>
+                    <div class="text-[11px] font-bold text-[#22C55E]">Puzzle Completed</div>
+                    <div class="flex items-center justify-between px-4 pt-2">
+                        <span class="w-7 h-7 rounded-full bg-[#1C1C22] border border-[#2E2E36] flex items-center justify-center text-xs">⊞</span>
+                        <div class="flex-1 h-0.5 bg-[#232329] mx-1"></div>
+                        <span class="w-7 h-7 rounded-full bg-[#1A2E21] border border-[#22C55E] flex items-center justify-center text-[10px] font-black text-[#22C55E]">π</span>
+                        <div class="flex-1 h-0.5 bg-[#232329] mx-1"></div>
+                        <span class="w-7 h-7 rounded-full bg-[#1C1C22] border border-[#2E2E36] flex items-center justify-center text-xs">⊞</span>
+                        <div class="flex-1 h-0.5 bg-[#232329] mx-1"></div>
+                        <span class="w-7 h-7 rounded-full bg-[#1A2E21] border border-[#22C55E] flex items-center justify-center text-[10px] font-black text-[#22C55E]">π</span>
+                    </div>
+                </div>
+
+                <!-- 2x2 Grid Cards (Sudoku, Cross Math, Ken Ken, Math Maze, Tango, Queens) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div onclick="startDirectSoloGame('sudoku')" class="cursor-pointer bg-[#0A0A0C] border border-[#24242C] rounded-2xl p-3 flex flex-col justify-between active:scale-95 transition">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2"><span>Easy ○</span><span class="text-[#22C55E]">SOLO</span></div>
+                        <div class="h-16 bg-[#000000] rounded-xl border border-[#1E3A29] grid grid-cols-4 gap-0.5 p-1.5 mb-2">
+                            <div class="bg-[#22C55E]/80 rounded-sm"></div><div class="bg-[#22C55E]/40 rounded-sm"></div><div class="bg-[#22C55E] rounded-sm"></div><div class="bg-[#22C55E]/60 rounded-sm"></div>
+                            <div class="bg-[#22C55E]/40 rounded-sm"></div><div class="bg-[#22C55E] rounded-sm"></div><div class="bg-[#22C55E]/50 rounded-sm"></div><div class="bg-[#22C55E]/90 rounded-sm"></div>
+                        </div>
+                        <div class="flex items-center justify-between"><span class="font-display font-extrabold text-sm text-white">SUDOKU</span><span class="text-[#22C55E] font-bold">›</span></div>
+                    </div>
+
+                    <div onclick="startDirectSoloGame('crossmath')" class="cursor-pointer bg-[#0A0A0C] border border-[#24242C] rounded-2xl p-3 flex flex-col justify-between active:scale-95 transition">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2"><span>Easy ○</span><span class="text-[#22C55E]">SOLO</span></div>
+                        <div class="h-16 bg-[#000000] rounded-xl border border-[#1E3A29] flex items-center justify-center font-mono-num text-xs font-extrabold text-[#22C55E] mb-2">÷ 38 = 4</div>
+                        <div class="flex items-center justify-between"><span class="font-display font-extrabold text-sm text-white">CROSS MATH</span><span class="text-[#22C55E] font-bold">›</span></div>
+                    </div>
+
+                    <div onclick="startDirectSoloGame('tango')" class="cursor-pointer bg-[#0A0A0C] border border-[#24242C] rounded-2xl p-3 flex flex-col justify-between active:scale-95 transition">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2"><span>New ★</span><span class="text-[#EAB308]">LOGIC</span></div>
+                        <div class="h-16 bg-[#000000] rounded-xl border border-[#27272E] flex items-center justify-center gap-2 text-xl mb-2">☀️ <span>=</span> 🌙</div>
+                        <div class="flex items-center justify-between"><span class="font-display font-extrabold text-sm text-white">TANGO</span><span class="text-[#22C55E] font-bold">›</span></div>
+                    </div>
+
+                    <div onclick="startDirectSoloGame('queens')" class="cursor-pointer bg-[#0A0A0C] border border-[#24242C] rounded-2xl p-3 flex flex-col justify-between active:scale-95 transition">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-400 mb-2"><span>New ★</span><span class="text-[#EC4899]">CROWN</span></div>
+                        <div class="h-16 bg-[#000000] rounded-xl border border-[#27272E] flex items-center justify-center gap-2 text-xl mb-2">👑 <span class="text-xs text-zinc-400">5×5</span></div>
+                        <div class="flex items-center justify-between"><span class="font-display font-extrabold text-sm text-white">QUEENS</span><span class="text-[#22C55E] font-bold">›</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 5: SNAC LEVEL ROADMAP (Screenshot 17) -->
+            <section id="view-snac" class="hidden space-y-3 pb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <button onclick="navigateBack()" class="w-9 h-9 rounded-xl bg-[#141418] border border-[#27272E] flex items-center justify-center text-white font-bold">←</button>
+                        <div>
+                            <h2 class="font-display text-base font-extrabold text-white uppercase">SNAC PUZZLE TRAIL</h2>
+                            <p class="text-[10px] text-zinc-400">Offline Logic Road (Tango, Queens & Grids)</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-[#18181F] border border-[#2E2E3A] font-mono-num text-xs font-extrabold text-[#38BDF8]">LVL <span id="snac-lvl-num">6</span></span>
+                </div>
+
+                <!-- Isometric-style Dark Path Container -->
+                <div class="bg-[#080B1A] border border-[#1E2548] rounded-3xl p-4 relative overflow-hidden flex flex-col items-center space-y-3">
+                    <div onclick="startDirectSoloGame('tango')" class="cursor-pointer w-20 h-12 rounded-2xl bg-[#161B33] border-2 border-[#38BDF8] flex flex-col items-center justify-center shadow-lg active:scale-95">
+                        <span class="text-[9px] font-extrabold text-[#38BDF8]">NEXT</span>
+                        <span class="font-mono-num text-sm font-black text-white">7 • TANGO</span>
+                    </div>
+                    <div class="w-1 h-4 bg-[#EAB308]"></div>
+                    <div onclick="startDirectSoloGame('queens')" class="cursor-pointer w-24 h-14 rounded-2xl bg-[#EAB308] text-black border-2 border-white flex flex-col items-center justify-center shadow-xl active:scale-95">
+                        <span class="text-[9px] font-black uppercase">★ CURRENT</span>
+                        <span class="font-mono-num text-sm font-black">6 • QUEENS</span>
+                    </div>
+                    <div class="w-1 h-4 bg-[#38BDF8]/50"></div>
+                    <div onclick="startDirectSoloGame('mathmaze')" class="cursor-pointer w-20 h-11 rounded-2xl bg-[#1E2952] border border-[#4F63B0] flex items-center justify-center font-mono-num text-xs font-bold text-white">5 ✓ MAZE</div>
+                    <div onclick="startDirectSoloGame('kenken')" class="cursor-pointer w-20 h-11 rounded-2xl bg-[#1E2952] border border-[#4F63B0] flex items-center justify-center font-mono-num text-xs font-bold text-white">4 ✓ KENKEN</div>
+                    <div onclick="startDirectSoloGame('crossmath')" class="cursor-pointer w-20 h-11 rounded-2xl bg-[#1E2952] border border-[#4F63B0] flex items-center justify-center font-mono-num text-xs font-bold text-white">3 ✓ CROSS</div>
+                    <div onclick="startDirectSoloGame('sudoku')" class="cursor-pointer w-20 h-11 rounded-2xl bg-[#1E2952] border border-[#4F63B0] flex items-center justify-center font-mono-num text-xs font-bold text-white">2 ✓ SUDOKU</div>
+                    <div onclick="startDirectSoloGame('tango')" class="cursor-pointer w-20 h-11 rounded-2xl bg-[#1E2952] border border-[#4F63B0] flex items-center justify-center font-mono-num text-xs font-bold text-white">1 ✓ TANGO</div>
+
+                    <button onclick="startDirectSoloGame('queens')" class="w-full py-3.5 mt-2 rounded-2xl bg-[#4F6BFF] border-2 border-white text-white font-display font-extrabold text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
+                        PLAY LEVEL 6 (QUEENS / TANGO)
+                    </button>
+                </div>
+            </section>
+
         </main>
 
         <!-- ================= BOTTOM NAVIGATION BAR (Screenshots 1, 6, 8) ================= -->
-        <nav id="bottom-nav" class="bg-[#121215] border-t border-[#1F1F24] px-2 py-1.5 flex items-center justify-between shrink-0 z-20">
+        <nav id="bottom-nav" class="bg-[#050507] border-t border-[#1F1F24] px-2 py-1.5 flex items-center justify-between shrink-0 z-20">
             <button onclick="showView('arena')" id="nav-btn-arena" class="flex flex-col items-center justify-center py-1 px-3 text-[#84CC16]">
                 <span class="text-base leading-none">⚔️</span>
                 <span class="text-[10px] font-extrabold uppercase mt-1">ARENA</span>
             </button>
-            <button onclick="selectCategory('puzzle'); showView('arena');" class="flex flex-col items-center justify-center py-1 px-3 text-zinc-400 hover:text-white">
+            <button onclick="showView('snac')" class="flex flex-col items-center justify-center py-1 px-3 text-zinc-400 hover:text-white">
                 <span class="text-base leading-none">🥨</span>
                 <span class="text-[10px] font-bold uppercase mt-1">SNAC</span>
             </button>
@@ -366,54 +461,43 @@ DUELS</h2>
         <!-- =========================================================================
              STRICT 100dvh ACTIVE GAME SCREEN (NO SCROLLING EVER - FITS ALL SCREENS)
              ========================================================================= -->
-        <div id="active-game-overlay" class="hidden fixed inset-0 w-full max-w-md mx-auto h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#0E0E10] z-40 flex flex-col justify-between select-none">
+        <div id="active-game-overlay" class="hidden fixed inset-0 w-full max-w-md mx-auto h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#000000] z-40 flex flex-col justify-between select-none">
 
-            <!-- 1. COMPACT DUEL TOP HEADER (Matches Screenshots 2, 3, 4, 5, 7) -->
-            <div class="px-3 pt-2.5 pb-1.5 shrink-0 flex flex-col gap-1.5 border-b border-[#1B1B20] bg-[#0E0E10]">
+            <!-- 1. COMPACT SOLO TOP HEADER WITH CLEAR BACK BUTTON (Matches Screenshot 18 - NO BOT) -->
+            <div class="px-3 pt-2.5 pb-1.5 shrink-0 flex flex-col gap-1.5 border-b border-[#18181D] bg-[#000000]">
                 <div class="flex items-center justify-between">
-                    <!-- Player Left -->
+                    <!-- Left: Explicit Back Button (←) + Score Pill -->
                     <div class="flex items-center gap-2">
-                        <button onclick="exitActiveGame()" class="w-8 h-8 rounded-lg bg-[#EC4899] text-white font-display font-bold text-base flex items-center justify-center shadow" title="Tap to exit">
-                            d
+                        <button onclick="navigateBack()" class="w-9 h-9 rounded-xl bg-[#16161A] border border-[#2E2E36] text-white font-extrabold text-lg flex items-center justify-center shadow active:scale-95" title="Back">
+                            ←
                         </button>
-                        <div>
-                            <div class="text-xs font-extrabold text-white leading-tight">you_offline</div>
-                            <div id="duel-player-rating" class="text-[10px] font-mono-num text-zinc-400">1000</div>
+                        <div class="px-3 py-1 rounded-xl bg-[#141418] border border-[#27272E] flex items-center gap-1.5">
+                            <span class="text-[10px] font-bold uppercase text-zinc-400">SCORE</span>
+                            <span id="duel-player-score" class="font-mono-num text-xs font-extrabold text-[#22C55E]">0</span>
+                        </div>
+                        <span id="duel-player-rating" class="hidden">1000</span>
+                        <span id="duel-bot-score" class="hidden">0</span>
+                    </div>
+
+                    <!-- Center: Active Game Title & Timer -->
+                    <div class="flex flex-col items-center">
+                        <span id="active-game-title" class="font-display text-xs font-extrabold uppercase tracking-wider text-zinc-200">MATIKS SOLO</span>
+                        <div class="px-3 py-0.5 rounded-full bg-[#121216] border border-[#27272E] font-mono-num text-xs font-bold text-[#38BDF8]" id="duel-timer">
+                            1:59
                         </div>
                     </div>
 
-                    <!-- Center Timer Pill -->
+                    <!-- Right: Skip & Free Hint (Matches Screenshot 18) -->
                     <div class="flex items-center gap-1.5">
-                        <div class="px-3.5 py-1 rounded-full bg-[#151519] border border-[#27272E] font-mono-num text-sm font-bold text-[#38BDF8]" id="duel-timer">
-                            1:59
-                        </div>
-                        <button onclick="triggerFreeHint()" class="px-2 py-1 rounded-lg bg-[#1A2416] border border-[#22C55E]/40 text-[#4ADE80] text-[10px] font-extrabold" title="Free Hint">
+                        <button onclick="skipCurrentPuzzle()" class="px-2.5 py-1.5 rounded-xl bg-[#16161A] border border-[#2E2E36] text-zinc-200 text-[11px] font-bold active:scale-95">
+                            Skip ↻
+                        </button>
+                        <button onclick="triggerFreeHint()" class="w-9 h-9 rounded-xl bg-[#162419] border border-[#22C55E]/40 text-[#4ADE80] text-sm font-extrabold flex items-center justify-center active:scale-95" title="Free Hint">
                             💡
                         </button>
                     </div>
-
-                    <!-- Bot Right -->
-                    <div class="flex items-center gap-2 text-right">
-                        <div>
-                            <div class="text-xs font-extrabold text-white leading-tight">catus_bot</div>
-                            <div class="text-[10px] font-mono-num text-zinc-400">1030</div>
-                        </div>
-                        <div class="w-8 h-8 rounded-lg bg-[#2DD4BF] text-black flex items-center justify-center text-base shadow">
-                            🐱
-                        </div>
-                    </div>
                 </div>
-
-                <!-- Score Pills Row -->
-                <div class="flex items-center justify-between">
-                    <div id="duel-player-score" class="px-3.5 py-0.5 rounded-full bg-[#1C1C21] border border-[#2C2C34] font-mono-num text-xs font-bold text-white">
-                        0
-                    </div>
-                    <div id="duel-hint-toast" class="text-[10px] font-mono-num text-[#4ADE80] truncate max-w-[200px]"></div>
-                    <div id="duel-bot-score" class="px-3.5 py-0.5 rounded-full bg-[#1C1C21] border border-[#2C2C34] font-mono-num text-xs font-bold text-white">
-                        0
-                    </div>
-                </div>
+                <div id="duel-hint-toast" class="text-[11px] font-mono-num text-center text-[#4ADE80] truncate w-full min-h-[14px]"></div>
             </div>
 
             <!-- 2. FLEXIBLE MIDDLE STAGE (Auto-scales to fit between top bar and bottom controls) -->
@@ -422,7 +506,7 @@ DUELS</h2>
             </div>
 
             <!-- 3. COMPACT ELEVATED BOTTOM CONTROLS / KEYBOARD (Never clipped or scrolled) -->
-            <div id="game-controls" class="shrink-0 w-full px-2.5 pt-1 pb-2.5 bg-[#0E0E10]" style="padding-bottom: max(10px, env(safe-area-inset-bottom));">
+            <div id="game-controls" class="shrink-0 w-full px-2.5 pt-1 pb-2.5 bg-[#000000]" style="padding-bottom: max(10px, env(safe-area-inset-bottom));">
                 <!-- Dynamically populated with either 4x4 Compact Keyboard OR Puzzle Controls -->
             </div>
 
@@ -430,31 +514,26 @@ DUELS</h2>
 
         <!-- ================= POST-GAME RESULTS MODAL ================= -->
         <div id="results-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="w-full max-w-sm bg-[#18181B] border border-[#2E2E36] rounded-3xl p-5 space-y-4 text-center shadow-2xl">
+            <div class="w-full max-w-sm bg-[#0A0A0C] border border-[#2E2E36] rounded-3xl p-5 space-y-4 text-center shadow-2xl">
                 <span id="modal-badge" class="px-3 py-1 rounded-full bg-[#22C55E]/20 text-[#4ADE80] text-xs font-extrabold uppercase">MATCH FINISHED</span>
                 <h2 id="modal-title" class="font-display text-2xl font-extrabold text-white">VICTORY!</h2>
                 <p id="modal-subtitle" class="text-xs text-zinc-400">Progress saved to offline storage</p>
 
-                <div class="grid grid-cols-2 gap-2.5">
-                    <div class="bg-[#101013] border border-[#25252C] rounded-2xl p-3">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">YOUR SCORE</span>
-                        <div id="modal-user-score" class="font-mono-num text-2xl font-extrabold text-[#22C55E] mt-0.5">0</div>
-                    </div>
-                    <div class="bg-[#101013] border border-[#25252C] rounded-2xl p-3">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">BOT SCORE</span>
-                        <div id="modal-bot-score" class="font-mono-num text-2xl font-extrabold text-[#38BDF8] mt-0.5">0</div>
-                    </div>
+                <div class="bg-[#0A0A0D] border border-[#25252C] rounded-2xl p-4">
+                    <span class="text-[10px] font-bold text-zinc-400 uppercase">YOUR FINAL SCORE</span>
+                    <div id="modal-user-score" class="font-mono-num text-3xl font-extrabold text-[#22C55E] mt-1">0</div>
+                    <div id="modal-bot-score" class="hidden">0</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2.5 pt-1">
                     <button onclick="closeResults()" class="py-3 rounded-xl bg-[#27272E] text-white font-bold text-xs uppercase">HOME</button>
-                    <button onclick="replayCurrentGame()" class="py-3 rounded-xl bg-[#EAB308] text-black font-extrabold text-xs uppercase">PLAY AGAIN ↻</button>
+                    <button onclick="replayCurrentGame()" class="py-3 rounded-xl bg-[#EAB308] text-black font-extrabold text-xs uppercase">NEXT STAGE ↻</button>
                 </div>
             </div>
         </div>
 
         <!-- ================= GITHUB ACTIONS NATIVE APK BUILDER MODAL ================= -->
-        <div id="apk-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3">
+        <div id="apk-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3">
             <div class="w-full max-w-md max-h-[90dvh] bg-[#16161A] border border-[#2D2D35] rounded-3xl p-4 flex flex-col justify-between space-y-3 overflow-hidden shadow-2xl">
                 <div class="flex items-center justify-between border-b border-[#26262E] pb-2.5">
                     <div>
@@ -469,24 +548,36 @@ DUELS</h2>
                         सिर्फ HTML फाइल से सीधा APK नहीं बनता, इसलिए नीचे दिए गए बटनों से **4 ज़रूरी कॉन्फ़िगरेशन फाइल्स** डाउनलोड करें और उन्हें अपने GitHub Repository में अपलोड कर दें। GitHub Actions अपने आप आपके लिए फ्री में **Android `.apk`** तैयार कर देगा!
                     </p>
 
-                    <!-- Step-by-step file download buttons -->
-                    <div class="space-y-2">
-                        <button onclick="downloadRepoFile('index.html')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#4ADE80]">1. www/index.html (This App)</span>
+                    <!-- Step-by-step file download buttons (Includes 3 Adaptive Logo PNGs) -->
+                    <div class="space-y-1.5">
+                        <button onclick="downloadRepoFile('index.html')" class="w-full py-2 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
+                            <span class="font-mono-num font-bold text-[#4ADE80]">1. index.html (Full AMOLED App)</span>
                             <span class="text-[10px] bg-[#22C55E] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
                         </button>
 
-                        <button onclick="downloadRepoFile('package.json')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
-                            <span class="font-mono-num font-bold text-[#EAB308]">2. package.json (Capacitor Deps)</span>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button onclick="downloadPngLogo('matiks-icon.png')" class="py-2 px-2 rounded-xl bg-[#142218] border border-[#22C55E]/50 text-[10px] font-mono-num font-bold text-[#4ADE80] text-center">
+                                🖼️ matiks-icon.png
+                            </button>
+                            <button onclick="downloadPngLogo('matiks-foreground.png')" class="py-2 px-2 rounded-xl bg-[#142218] border border-[#22C55E]/50 text-[10px] font-mono-num font-bold text-[#4ADE80] text-center">
+                                🖼️ foreground.png
+                            </button>
+                            <button onclick="downloadPngLogo('matiks-background.png')" class="py-2 px-2 rounded-xl bg-[#142218] border border-[#22C55E]/50 text-[10px] font-mono-num font-bold text-[#4ADE80] text-center">
+                                🖼️ background.png
+                            </button>
+                        </div>
+
+                        <button onclick="downloadRepoFile('package.json')" class="w-full py-2 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
+                            <span class="font-mono-num font-bold text-[#EAB308]">2. package.json</span>
                             <span class="text-[10px] bg-[#EAB308] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
                         </button>
 
-                        <button onclick="downloadRepoFile('capacitor.config.json')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
+                        <button onclick="downloadRepoFile('capacitor.config.json')" class="w-full py-2 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
                             <span class="font-mono-num font-bold text-[#38BDF8]">3. capacitor.config.json</span>
                             <span class="text-[10px] bg-[#38BDF8] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
                         </button>
 
-                        <button onclick="downloadRepoFile('build-apk.yml')" class="w-full py-2.5 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
+                        <button onclick="downloadRepoFile('build-apk.yml')" class="w-full py-2 px-3 rounded-xl bg-[#1F1F26] hover:bg-[#292932] border border-[#32323D] flex items-center justify-between">
                             <span class="font-mono-num font-bold text-[#F472B6]">4. .github/workflows/build-apk.yml</span>
                             <span class="text-[10px] bg-[#F472B6] text-black px-2 py-0.5 rounded font-extrabold">DOWNLOAD</span>
                         </button>
@@ -572,22 +663,26 @@ jobs:
 
         const GAME_CATALOG = {
             math: [
-                { id: 'sprint', title: 'SPRINT\nDUELS', sub: 'RACE TO SOLVE THE MOST IN 1 MINUTE.', rating: 1009, badge: 'MATH' },
-                { id: 'fastest', title: 'FASTEST FINGERS\nDUELS', sub: 'BE THE FIRST TO ANSWER EACH QUESTION.', rating: 1005, badge: 'MATH' },
-                { id: 'anzan', title: 'FLASH ANZAN\nDUELS', sub: 'NUMBERS FLASH, SUM THEM WITH SPEED.', rating: 1000, badge: 'MATH' }
+                { id: 'sprint', title: 'SPRINT\nSOLO', sub: 'SOLVE MAXIMUM PROBLEMS IN 1 MINUTE.', rating: 1009, badge: 'MATH' },
+                { id: 'fastest', title: 'FASTEST FINGERS\nSOLO', sub: 'LIGHTNING ARITHMETIC SPEED CHALLENGE.', rating: 1005, badge: 'MATH' },
+                { id: 'anzan', title: 'FLASH ANZAN\nSOLO', sub: 'NUMBERS FLASH, SUM THEM WITH SPEED.', rating: 1000, badge: 'MATH' }
             ],
             memory: [
-                { id: 'pinball', title: 'PIN BALL RECALL\nDUELS', sub: 'TRACK THE BALL, RECALL THE EXIT.', rating: 1000, isNew: true },
-                { id: 'mindsnap', title: 'MIND SNAP\nDUELS', sub: 'WHO CAN SNAP FASTER?', rating: 1016 }
+                { id: 'pinball', title: 'PIN BALL RECALL', sub: 'DEFLECT THE LASER BEAM & RECALL THE EXIT.', rating: 1000, isNew: true },
+                { id: 'mindsnap', title: 'MEMORY MATRIX\n4×4', sub: 'MEMORIZE THE GLOWING CYAN TILES.', rating: 1016, isNew: true }
             ],
             puzzle: [
-                { id: 'sudoku', title: 'SUDOKU\nDUELS', sub: 'FILL THE GRID WITH LOGIC AND SPEED.', rating: 1000 },
-                { id: 'crossmath', title: 'CROSS MATH\nDUELS', sub: 'OUTSOLVE YOUR RIVAL, FILL THE GRID.', rating: 1000 },
-                { id: 'kenken', title: 'KEN KEN\nDUELS', sub: 'LOGIC AND NUMBER COLLIDE IN CAGES.', rating: 1000 },
-                { id: 'mathmaze', title: 'MATH MAZE\nDUELS', sub: 'SOLVE THE MAZE TO WIN.', rating: 1000 }
+                { id: 'tango', title: 'TANGO\n4×4', sub: 'QUICK 4×4 SUN ☀️ & MOON 🌙 LOGIC STAGES.', rating: 1020, isNew: true },
+                { id: 'queens', title: 'QUEENS\nPUZZLE', sub: '1 CROWN 👑 PER ROW, COL & COLOR REGION.', rating: 1015, isNew: true },
+                { id: 'sudoku', title: 'SUDOKU\nFAST 4×4', sub: 'QUICK-FIRE 4×4 & 6×6 LOGIC STAGES.', rating: 1000 },
+                { id: 'crossmath', title: 'CROSS MATH', sub: 'SOLVE INTERSECTING EQUATION GRIDS.', rating: 1000 },
+                { id: 'kenken', title: 'KEN KEN\n4×4', sub: 'LOGIC AND NUMBER COLLIDE IN CAGES.', rating: 1000 },
+                { id: 'mathmaze', title: 'MATH MAZE', sub: 'CONNECT START TO END TO HIT TARGET.', rating: 1000 }
             ],
             logic: [
-                { id: 'ability', title: 'ABILITY\nDUELS', sub: 'SPEED MEETS FULL MATH SKILLSET (MOD %, √, ^).', rating: 1000, badge: 'LOGIC' }
+                { id: 'ability', title: 'ABILITY\nCHALLENGE', sub: 'SPEED MEETS FULL MATH SKILLSET (MOD %, √, ^).', rating: 1000, badge: 'LOGIC' },
+                { id: 'tango', title: 'TANGO\nLOGIC', sub: 'DEDUCE SUNS & MOONS WITHOUT 3 IN A ROW.', rating: 1020, isNew: true },
+                { id: 'queens', title: 'QUEENS\nCROWN', sub: 'PLACE CROWNS WITHOUT TOUCHING.', rating: 1015, isNew: true }
             ]
         };
 
@@ -609,7 +704,7 @@ jobs:
             const histEl = document.getElementById('history-container');
             if (state.history.length > 0) {
                 histEl.innerHTML = state.history.slice(0, 10).map(h => `
-                    <div class="flex justify-between items-center bg-[#121215] px-3 py-2 rounded-xl border border-[#232329]">
+                    <div class="flex justify-between items-center bg-[#050507] px-3 py-2 rounded-xl border border-[#232329]">
                         <span class="font-bold text-white uppercase">${h.mode}</span>
                         <span class="font-mono-num text-[#22C55E]">Score: ${h.score}</span>
                     </div>
@@ -647,7 +742,7 @@ jobs:
             const arrowColor = colors[cat];
 
             container.innerHTML = list.map(item => `
-                <div onclick="openLobby('${item.id}')" class="cursor-pointer bg-[#18181B] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
+                <div onclick="openLobby('${item.id}')" class="cursor-pointer bg-[#0A0A0C] hover:bg-[#1F1F24] border border-[#26262C] rounded-2xl p-5 relative transition active:scale-[0.99]">
                     ${item.isNew ? `<span class="absolute -top-2.5 right-4 px-3 py-0.5 rounded-full bg-[#1E1B2E] border border-[#A855F7] text-white text-[10px] font-extrabold uppercase">NEW</span>` : ''}
                     <div class="mb-2">
                         <span class="px-2.5 py-1 rounded bg-[#232329] text-[11px] font-mono-num font-bold text-zinc-300">
@@ -665,12 +760,58 @@ jobs:
             `).join('');
         }
 
-        function showView(viewId) {
-            ['arena', 'lobby', 'stats'].forEach(v => {
-                document.getElementById(`view-${v}`).classList.add('hidden');
+        let currentViewId = 'arena';
+        function showView(viewId, skipHistory = false) {
+            ['arena', 'lobby', 'stats', 'daily', 'snac'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
             });
-            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.remove('hidden');
+            currentViewId = viewId;
+            if (!skipHistory) {
+                history.pushState({ view: viewId, inGame: false }, '', '');
+            }
             updateHeaderUI();
+        }
+
+        function navigateBack() {
+            const overlay = document.getElementById('active-game-overlay');
+            if (!overlay.classList.contains('hidden')) {
+                exitActiveGame();
+                return;
+            }
+            if (currentViewId !== 'arena') {
+                showView('arena', true);
+            }
+        }
+
+        window.addEventListener('popstate', () => {
+            const overlay = document.getElementById('active-game-overlay');
+            if (!overlay.classList.contains('hidden')) {
+                exitActiveGame();
+            } else if (currentViewId !== 'arena') {
+                showView('arena', true);
+            }
+        });
+
+        function startDirectSoloGame(gameId) {
+            selectedGameId = gameId;
+            launchSelectedGame(false);
+        }
+
+        function skipCurrentPuzzle() {
+            advanceStageIndex();
+            launchSelectedGame(false);
+        }
+
+        function advanceStageIndex() {
+            if (selectedGameId === 'queens') queensIdx++;
+            else if (selectedGameId === 'tango') tangoIdx++;
+            else if (selectedGameId === 'sudoku') sudokuStageIdx++;
+            else if (selectedGameId === 'crossmath') crossIndex++;
+            else if (selectedGameId === 'kenken') kenkenStageIdx++;
+            else if (selectedGameId === 'mathmaze') mazeIdx++;
         }
 
         function openLobby(gameId) {
@@ -689,10 +830,10 @@ jobs:
             timerSetting = m;
             document.getElementById('timer-btn-timed').className = m === 'timed'
                 ? 'py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#EAB308] bg-[#EAB308]/10 text-[#EAB308]'
-                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400';
+                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#050507] text-zinc-400';
             document.getElementById('timer-btn-zen').className = m === 'zen'
                 ? 'py-2.5 rounded-xl text-xs font-extrabold uppercase border-2 border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]'
-                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#121215] text-zinc-400';
+                : 'py-2.5 rounded-xl text-xs font-extrabold uppercase border border-[#27272A] bg-[#050507] text-zinc-400';
         }
 
         /********************************************************************
@@ -730,23 +871,30 @@ jobs:
         // Mind Snap state
         let snapState = null;
 
-        function launchSelectedGame(vsBot) {
-            withBot = vsBot;
+        function launchSelectedGame(vsBot = false) {
+            withBot = false;
             userScore = 0;
             botScore = 0;
             currentHintText = '';
             document.getElementById('duel-player-score').textContent = '0';
-            document.getElementById('duel-bot-score').textContent = '0';
             document.getElementById('duel-hint-toast').textContent = '';
-            document.getElementById('duel-player-rating').textContent = state.ratings[activeCategory];
+            const titleMap = {
+                sprint: 'SPRINT SOLO', fastest: 'FASTEST FINGERS', anzan: 'FLASH ANZAN',
+                ability: 'ABILITY MOD %', sudoku: 'SUDOKU 6×6', crossmath: 'CROSS MATH',
+                kenken: 'KENKEN 4×4', mathmaze: 'MATH MAZE', pinball: 'PINBALL RECALL',
+                mindsnap: 'MEMORY MATRIX', tango: 'TANGO PUZZLE', queens: 'QUEENS CROWN'
+            };
+            const titleEl = document.getElementById('active-game-title');
+            if (titleEl) titleEl.textContent = titleMap[selectedGameId] || 'MATIKS SOLO';
 
+            history.pushState({ view: currentViewId, inGame: true }, '', '');
             document.getElementById('active-game-overlay').classList.remove('hidden');
 
             // Setup Timer
             clearInterval(gameTimer);
             clearInterval(botTimer);
-            if (timerSetting === 'zen') {
-                document.getElementById('duel-timer').textContent = '∞ ZEN';
+            if (timerSetting === 'zen' || selectedGameId === 'tango' || selectedGameId === 'queens') {
+                document.getElementById('duel-timer').textContent = '∞ SOLO';
             } else {
                 timeLeft = (selectedGameId === 'sprint' || selectedGameId === 'ability') ? 60 : 120;
                 updateTimerDisplay();
@@ -755,16 +903,6 @@ jobs:
                     updateTimerDisplay();
                     if (timeLeft <= 0) endActiveGame();
                 }, 1000);
-            }
-
-            if (withBot) {
-                const botIntervalMs = (selectedGameId === 'sudoku' || selectedGameId === 'kenken') ? 18000 : 4500;
-                botTimer = setInterval(() => {
-                    if (Math.random() < 0.8) {
-                        botScore += (selectedGameId === 'ability' || selectedGameId === 'sprint') ? 5 : 1;
-                        document.getElementById('duel-bot-score').textContent = botScore;
-                    }
-                }, botIntervalMs);
             }
 
             // Route to specific game builder
@@ -782,6 +920,10 @@ jobs:
                 setupPinballRecall();
             } else if (selectedGameId === 'mindsnap') {
                 setupMindSnap();
+            } else if (selectedGameId === 'tango') {
+                setupTangoPuzzle();
+            } else if (selectedGameId === 'queens') {
+                setupQueensPuzzle();
             }
         }
 
@@ -933,37 +1075,44 @@ jobs:
         }
 
         /********************************************************************
-         * MODE B: SUDOKU DUELS (6x6 Grid with 2x3 Boxes - Screenshot 2)
+         * MODE B: FAST 4x4 SUDOKU STAGES (Quick Maps + Auto Next Stage!)
          ********************************************************************/
+        const SUDOKU_STAGES = [
+            {
+                sol: [1, 2, 3, 4,  3, 4, 1, 2,  2, 1, 4, 3,  4, 3, 2, 1],
+                mask: [1, 0, 3, 0,  0, 4, 0, 2,  2, 0, 4, 0,  0, 3, 0, 1]
+            },
+            {
+                sol: [2, 1, 4, 3,  4, 3, 2, 1,  1, 4, 3, 2,  3, 2, 1, 4],
+                mask: [0, 1, 4, 0,  4, 0, 0, 1,  1, 0, 0, 2,  0, 2, 1, 0]
+            },
+            {
+                sol: [3, 4, 1, 2,  1, 2, 3, 4,  4, 3, 2, 1,  2, 1, 4, 3],
+                mask: [3, 0, 1, 0,  0, 2, 0, 4,  4, 0, 2, 0,  0, 1, 0, 3]
+            },
+            {
+                sol: [4, 1, 2, 3,  2, 3, 4, 1,  3, 4, 1, 2,  1, 2, 3, 4],
+                mask: [4, 1, 0, 0,  0, 0, 4, 1,  3, 4, 0, 0,  0, 0, 3, 4]
+            },
+            {
+                sol: [1, 3, 4, 2,  4, 2, 1, 3,  2, 4, 3, 1,  3, 1, 2, 4],
+                mask: [0, 3, 0, 2,  4, 0, 1, 0,  0, 4, 0, 1,  3, 0, 2, 0]
+            },
+            {
+                sol: [2, 4, 3, 1,  1, 3, 2, 4,  4, 2, 1, 3,  3, 1, 4, 2],
+                mask: [2, 0, 3, 0,  0, 3, 0, 4,  4, 0, 1, 0,  0, 1, 0, 2]
+            }
+        ];
+        let sudokuStageIdx = 0;
+
         function setupSudoku6x6() {
-            // Valid 6x6 Sudoku base solution (2x3 sub-boxes)
-            const base = [
-                3, 1, 2, 4, 6, 5,
-                4, 3, 5, 2, 6, 1, // wait let's use a 100% valid 6x6 Latin/Sudoku grid:
-            ];
-            const valid6x6 = [
-                6, 1, 2, 4, 3, 5,
-                3, 4, 5, 2, 6, 1,
-                2, 5, 6, 3, 1, 4,
-                1, 3, 4, 6, 5, 2,
-                4, 2, 1, 5, 4, 6, // let's ensure strict 6x6 validity:
-            ];
-            const canonical6x6 = [
-                6, 1, 2, 4, 3, 5,
-                4, 3, 5, 2, 6, 1,
-                2, 5, 6, 3, 1, 4,
-                1, 4, 3, 6, 5, 2,
-                3, 2, 1, 5, 4, 6,
-                5, 6, 4, 1, 2, 3
-            ];
-
-            puzzleSolution = [...canonical6x6];
-            puzzleBoard = puzzleSolution.map((val, idx) => (idx % 2 === 0 || idx % 5 === 0) ? val : 0);
-            puzzleBoard[0] = 0; // Top-left selected like Screenshot 2
+            const stg = SUDOKU_STAGES[sudokuStageIdx % SUDOKU_STAGES.length];
+            puzzleSolution = [...stg.sol];
+            puzzleBoard = [...stg.mask];
             puzzleFixed = puzzleBoard.map(v => v !== 0);
-            selectedCell = 0;
+            selectedCell = puzzleBoard.findIndex(v => v === 0);
+            if (selectedCell === -1) selectedCell = 0;
             moveHistory = [];
-
             renderSudokuScreen();
         }
 
@@ -971,42 +1120,47 @@ jobs:
             const stage = document.getElementById('game-stage');
             const controls = document.getElementById('game-controls');
 
-            currentHintText = `💡 Selected cell value is ${puzzleSolution[selectedCell]}`;
+            currentHintText = `💡 Stage ${sudokuStageIdx + 1}: Selected cell is ${puzzleSolution[selectedCell]}`;
 
             let cellsHtml = '';
-            for (let i = 0; i < 36; i++) {
-                const r = Math.floor(i / 6);
-                const c = i % 6;
+            for (let i = 0; i < 16; i++) {
+                const r = Math.floor(i / 4);
+                const c = i % 4;
                 const val = puzzleBoard[i];
                 const isSelected = i === selectedCell;
-                const thickRight = (c === 2) ? 'border-r-2 border-r-[#22C55E]' : 'border-r border-r-[#1E3A29]';
-                const thickBottom = (r === 1 || r === 3) ? 'border-b-2 border-b-[#22C55E]' : 'border-b border-b-[#1E3A29]';
-                const bgClass = isSelected ? 'bg-[#22C55E] text-black font-black' : (puzzleFixed[i] ? 'bg-[#12241A] text-zinc-400' : 'bg-[#0F1914] text-white');
+                const thickRight = (c === 1) ? 'border-r-2 border-r-[#22C55E]' : 'border-r border-r-[#1E3A29]';
+                const thickBottom = (r === 1) ? 'border-b-2 border-b-[#22C55E]' : 'border-b border-b-[#1E3A29]';
+                const bgClass = isSelected ? 'bg-[#22C55E] text-black font-black' : (puzzleFixed[i] ? 'bg-[#12241A] text-zinc-400' : 'bg-[#08100B] text-white');
 
                 cellsHtml += `
-                    <div onclick="selectSudokuCell(${i})" class="aspect-square flex items-center justify-center font-mono-num text-lg font-bold cursor-pointer ${thickRight} ${thickBottom} ${bgClass}">
+                    <div onclick="selectSudokuCell(${i})" class="aspect-square flex items-center justify-center font-mono-num text-2xl font-extrabold cursor-pointer ${thickRight} ${thickBottom} ${bgClass}">
                         ${val !== 0 ? val : ''}
                     </div>
                 `;
             }
 
             stage.innerHTML = `
-                <div class="w-full max-w-[310px] aspect-square border-2 border-[#22C55E] rounded-sm grid grid-cols-6 overflow-hidden shadow-lg">
-                    ${cellsHtml}
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="mb-2 px-3 py-0.5 rounded-full bg-[#12241A] border border-[#22C55E]/40 text-[11px] font-mono-num font-extrabold text-[#4ADE80]">
+                        SUDOKU 4×4 • STAGE ${sudokuStageIdx + 1}
+                    </div>
+                    <div class="w-full max-w-[260px] aspect-square border-2 border-[#22C55E] rounded-xl grid grid-cols-4 overflow-hidden shadow-lg">
+                        ${cellsHtml}
+                    </div>
                 </div>
             `;
 
             controls.innerHTML = `
-                <div class="max-w-[310px] mx-auto space-y-2.5">
+                <div class="max-w-[280px] mx-auto space-y-2.5">
                     <div class="flex items-center justify-between gap-2">
-                        <button onclick="undoPuzzleMove()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↺</button>
+                        <button onclick="undoPuzzleMove()" class="w-11 h-10 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↺</button>
                         <button onclick="triggerFreeHint()" class="w-11 h-10 rounded-xl bg-[#13251B] border border-[#22C55E] text-[#22C55E] font-bold">✎</button>
-                        <button onclick="clearPuzzleCell()" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold tracking-wider uppercase text-zinc-300">☰ CLEAR</button>
-                        <button onclick="setupSudoku6x6()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↻</button>
+                        <button onclick="clearPuzzleCell()" class="flex-1 h-10 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold tracking-wider uppercase text-zinc-300">☰ CLEAR</button>
+                        <button onclick="sudokuStageIdx++; setupSudoku6x6();" class="w-11 h-10 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold" title="Next Map">↻</button>
                     </div>
-                    <div class="grid grid-cols-3 gap-2.5 px-4">
-                        ${[1,2,3,4,5,6].map(n => `
-                            <button onclick="inputSudokuNumber(${n})" class="puzzle-num-btn h-11 text-lg">${n}</button>
+                    <div class="grid grid-cols-4 gap-2">
+                        ${[1,2,3,4].map(n => `
+                            <button onclick="inputSudokuNumber(${n})" class="puzzle-num-btn h-12 text-xl">${n}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -1025,13 +1179,20 @@ jobs:
 
             if (n === puzzleSolution[selectedCell]) {
                 addScore(2);
+                const nextEmpty = puzzleBoard.findIndex(v => v === 0);
+                if (nextEmpty !== -1) selectedCell = nextEmpty;
             }
             renderSudokuScreen();
 
-            // Check if complete
+            // Auto-advance to next stage immediately when solved!
             if (puzzleBoard.every((v, i) => v === puzzleSolution[i])) {
-                addScore(20);
-                setTimeout(() => endActiveGame('SUDOKU SOLVED!'), 300);
+                addScore(15);
+                sudokuStageIdx++;
+                document.getElementById('duel-hint-toast').textContent = `🎉 STAGE ${sudokuStageIdx} CLEARED! Loading Stage ${sudokuStageIdx + 1}...`;
+                setTimeout(() => {
+                    document.getElementById('duel-hint-toast').textContent = '';
+                    setupSudoku6x6();
+                }, 450);
             }
         }
 
@@ -1052,16 +1213,10 @@ jobs:
         }
 
         /********************************************************************
-         * MODE C: CROSS MATH DUELS (Screenshot 3)
+         * MODE C: CROSS MATH STAGES (6 Fast Maps + Auto-Advance!)
          ********************************************************************/
         const CROSS_PUZZLES = [
             {
-                // Matches Screenshot 3 layout!
-                // Row 0: [152] ÷ 38 = 4
-                // OpRow:   +      -
-                // Row 2: [16]  -  5 = 11
-                // EqRow:   =      =
-                // Row 4:  168    33
                 blanks: { '0,0': 152, '2,0': 16 },
                 userVals: { '0,0': null, '2,0': null },
                 selectedKey: '0,0',
@@ -1086,6 +1241,58 @@ jobs:
                     [{ t: '=' }, null, { t: '=' }, null, null],
                     [{ t: '57' }, null, { t: '13' }, null, null]
                 ]
+            },
+            {
+                blanks: { '0,0': 24, '2,0': 9 },
+                userVals: { '0,0': null, '2,0': null },
+                selectedKey: '0,0',
+                choices: [9, 24],
+                grid: [
+                    [{ blank: '0,0' }, { t: '÷' }, { t: '6' }, { t: '=' }, { t: '4' }],
+                    [{ t: '+' }, null, { t: '+' }, null, null],
+                    [{ blank: '2,0' }, { t: '+' }, { t: '5' }, { t: '=' }, { t: '14' }],
+                    [{ t: '=' }, null, { t: '=' }, null, null],
+                    [{ t: '33' }, null, { t: '11' }, null, null]
+                ]
+            },
+            {
+                blanks: { '0,0': 36, '2,0': 15 },
+                userVals: { '0,0': null, '2,0': null },
+                selectedKey: '0,0',
+                choices: [15, 36],
+                grid: [
+                    [{ blank: '0,0' }, { t: '÷' }, { t: '12' }, { t: '=' }, { t: '3' }],
+                    [{ t: '-' }, null, { t: '+' }, null, null],
+                    [{ blank: '2,0' }, { t: '-' }, { t: '7' }, { t: '=' }, { t: '8' }],
+                    [{ t: '=' }, null, { t: '=' }, null, null],
+                    [{ t: '21' }, null, { t: '19' }, null, null]
+                ]
+            },
+            {
+                blanks: { '0,0': 18, '2,0': 14 },
+                userVals: { '0,0': null, '2,0': null },
+                selectedKey: '0,0',
+                choices: [14, 18],
+                grid: [
+                    [{ blank: '0,0' }, { t: '+' }, { t: '7' }, { t: '=' }, { t: '25' }],
+                    [{ t: '+' }, null, { t: '+' }, null, null],
+                    [{ blank: '2,0' }, { t: '-' }, { t: '6' }, { t: '=' }, { t: '8' }],
+                    [{ t: '=' }, null, { t: '=' }, null, null],
+                    [{ t: '32' }, null, { t: '13' }, null, null]
+                ]
+            },
+            {
+                blanks: { '0,0': 42, '2,0': 11 },
+                userVals: { '0,0': null, '2,0': null },
+                selectedKey: '0,0',
+                choices: [11, 42],
+                grid: [
+                    [{ blank: '0,0' }, { t: '÷' }, { t: '7' }, { t: '=' }, { t: '6' }],
+                    [{ t: '-' }, null, { t: '+' }, null, null],
+                    [{ blank: '2,0' }, { t: '+' }, { t: '8' }, { t: '=' }, { t: '19' }],
+                    [{ t: '=' }, null, { t: '=' }, null, null],
+                    [{ t: '31' }, null, { t: '15' }, null, null]
+                ]
             }
         ];
         let crossIndex = 0;
@@ -1101,9 +1308,15 @@ jobs:
             const controls = document.getElementById('game-controls');
             const st = crossMathState;
 
-            currentHintText = `💡 ${st.selectedKey} needs ${st.blanks[st.selectedKey]}`;
+            currentHintText = `💡 Stage ${crossIndex + 1}: Box needs ${st.blanks[st.selectedKey]}`;
 
-            let html = '<div class="grid grid-cols-5 gap-1.5 w-full max-w-[280px]">';
+            let html = `
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="mb-2 px-3 py-0.5 rounded-full bg-[#12241A] border border-[#22C55E]/40 text-[11px] font-mono-num font-extrabold text-[#4ADE80]">
+                        CROSS MATH • STAGE ${crossIndex + 1}
+                    </div>
+                    <div class="grid grid-cols-5 gap-1.5 w-full max-w-[265px]">
+            `;
             for (let r = 0; r < 5; r++) {
                 for (let c = 0; c < 5; c++) {
                     const cell = st.grid[r][c];
@@ -1127,19 +1340,19 @@ jobs:
                     }
                 }
             }
-            html += '</div>';
+            html += '</div></div>';
             stage.innerHTML = html;
 
             controls.innerHTML = `
-                <div class="max-w-[290px] mx-auto space-y-3">
+                <div class="max-w-[290px] mx-auto space-y-2.5">
                     <div class="flex items-center justify-between gap-2">
-                        <button onclick="setupCrossMath()" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↺</button>
-                        <button onclick="clearCrossBlank()" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
-                        <button onclick="crossIndex++; setupCrossMath();" class="w-11 h-10 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-400 font-bold">↻</button>
+                        <button onclick="setupCrossMath()" class="w-11 h-10 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↺</button>
+                        <button onclick="clearCrossBlank()" class="flex-1 h-10 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
+                        <button onclick="crossIndex++; setupCrossMath();" class="w-11 h-10 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↻</button>
                     </div>
                     <div class="flex items-center justify-center gap-3">
                         ${st.choices.map(num => `
-                            <button onclick="placeCrossChoice(${num})" class="puzzle-num-btn w-16 h-12 text-base">${num}</button>
+                            <button onclick="placeCrossChoice(${num})" class="puzzle-num-btn w-20 h-12 text-lg">${num}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -1160,78 +1373,109 @@ jobs:
             const st = crossMathState;
             st.userVals[st.selectedKey] = num;
 
-            // Move selection to next empty blank
             const keys = Object.keys(st.blanks);
             const nextEmpty = keys.find(k => st.userVals[k] === null);
             if (nextEmpty) st.selectedKey = nextEmpty;
 
             renderCrossMath();
 
-            // Check win
             if (keys.every(k => st.userVals[k] === st.blanks[k])) {
                 addScore(15);
                 crossIndex++;
-                setTimeout(setupCrossMath, 350);
+                document.getElementById('duel-hint-toast').textContent = `🎉 STAGE ${crossIndex} CLEARED! Next Map...`;
+                setTimeout(() => {
+                    document.getElementById('duel-hint-toast').textContent = '';
+                    setupCrossMath();
+                }, 400);
             }
         }
 
         /********************************************************************
-         * MODE D: KEN KEN DUELS (4x4 Cage Grid - Screenshot 4)
+         * MODE D: FAST 3x3 & 4x4 KEN KEN STAGES (Quick Maps + Auto-Advance!)
          ********************************************************************/
-        function setupKenKen4x4() {
-            gridSize = 4;
-            puzzleSolution = [
-                2, 1, 4, 3,
-                4, 3, 2, 1,
-                3, 4, 1, 2,
-                1, 2, 3, 4
-            ];
-            puzzleBoard = new Array(16).fill(0);
-            selectedCell = 0;
+        const KENKEN_STAGES = [
+            {
+                size: 3,
+                sol: [1, 2, 3,  2, 3, 1,  3, 1, 2],
+                mask: [1, 0, 3,  0, 3, 0,  3, 0, 2],
+                clues: { 0: '1', 1: '+5', 2: '3', 3: '+5', 5: '1', 6: '3', 8: '2' }
+            },
+            {
+                size: 3,
+                sol: [2, 3, 1,  3, 1, 2,  1, 2, 3],
+                mask: [0, 3, 1,  3, 0, 0,  1, 0, 3],
+                clues: { 0: '+5', 1: '3', 2: '1', 4: '×2', 6: '1', 7: '2', 8: '3' }
+            },
+            {
+                size: 3,
+                sol: [3, 1, 2,  1, 2, 3,  2, 3, 1],
+                mask: [3, 0, 2,  0, 2, 0,  2, 0, 1],
+                clues: { 0: '3', 1: '+3', 2: '2', 3: '1', 5: '3', 6: '2', 7: '3', 8: '1' }
+            },
+            {
+                size: 4,
+                sol: [2, 1, 4, 3,  4, 3, 2, 1,  3, 4, 1, 2,  1, 2, 3, 4],
+                mask: [2, 0, 4, 0,  0, 3, 0, 1,  3, 0, 1, 0,  0, 2, 0, 4],
+                clues: { 0: '-1', 2: '4', 3: '3', 4: '4', 5: '3', 6: '×2', 8: '3', 9: '4', 10: '+3', 12: '+3', 14: '3', 15: '4' }
+            }
+        ];
+        let kenkenStageIdx = 0;
 
+        function setupKenKen4x4() {
+            const stg = KENKEN_STAGES[kenkenStageIdx % KENKEN_STAGES.length];
+            gridSize = stg.size;
+            puzzleSolution = [...stg.sol];
+            puzzleBoard = [...stg.mask];
+            puzzleFixed = puzzleBoard.map(v => v !== 0);
+            selectedCell = puzzleBoard.findIndex(v => v === 0);
+            if (selectedCell === -1) selectedCell = 0;
             renderKenKenScreen();
         }
 
         function renderKenKenScreen() {
             const stage = document.getElementById('game-stage');
             const controls = document.getElementById('game-controls');
+            const stg = KENKEN_STAGES[kenkenStageIdx % KENKEN_STAGES.length];
 
-            const cageLabels = {
-                0: '-1', 2: '4', 3: '3',
-                4: '4', 5: '3', 6: '×2',
-                8: '3', 9: '4', 10: '+3',
-                12: '+3', 14: '3', 15: '4'
-            };
-
-            currentHintText = `💡 Cell answer is ${puzzleSolution[selectedCell]}`;
+            currentHintText = `💡 Stage ${kenkenStageIdx + 1}: Selected cell answer is ${puzzleSolution[selectedCell]}`;
 
             let cells = '';
-            for (let i = 0; i < 16; i++) {
+            const total = gridSize * gridSize;
+            for (let i = 0; i < total; i++) {
                 const isSel = i === selectedCell;
-                const clue = cageLabels[i] || '';
+                const clue = stg.clues[i] || '';
                 const val = puzzleBoard[i];
                 cells += `
-                    <div onclick="selectedCell=${i}; renderKenKenScreen();" class="aspect-square border border-[#22C55E] relative flex items-center justify-center font-mono-num text-xl font-extrabold cursor-pointer ${isSel ? 'bg-[#FEF08A] text-black' : 'bg-[#121316] text-white'}">
-                        <span class="absolute top-0.5 left-1 text-[10px] font-mono-num font-bold ${isSel ? 'text-black' : 'text-zinc-300'}">${clue}</span>
+                    <div onclick="selectedCell=${i}; renderKenKenScreen();" class="aspect-square border border-[#22C55E] relative flex items-center justify-center font-mono-num text-2xl font-extrabold cursor-pointer ${isSel ? 'bg-[#FEF08A] text-black' : (puzzleFixed[i] ? 'bg-[#111C15] text-zinc-400' : 'bg-[#080B09] text-white')}">
+                        <span class="absolute top-0.5 left-1.5 text-[10px] font-mono-num font-bold ${isSel ? 'text-black' : 'text-[#4ADE80]'}">${clue}</span>
                         <span>${val !== 0 ? val : ''}</span>
                     </div>
                 `;
             }
 
+            const colsClass = gridSize === 3 ? 'grid-cols-3 max-w-[240px]' : 'grid-cols-4 max-w-[265px]';
+            const nums = gridSize === 3 ? [1, 2, 3] : [1, 2, 3, 4];
+
             stage.innerHTML = `
-                <div class="w-full max-w-[270px] aspect-square border-2 border-[#22C55E] grid grid-cols-4 overflow-hidden">
-                    ${cells}
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="mb-2 px-3 py-0.5 rounded-full bg-[#12241A] border border-[#22C55E]/40 text-[11px] font-mono-num font-extrabold text-[#4ADE80]">
+                        KENKEN ${gridSize}×${gridSize} • STAGE ${kenkenStageIdx + 1}
+                    </div>
+                    <div class="w-full ${colsClass} aspect-square border-2 border-[#22C55E] rounded-xl grid overflow-hidden shadow-lg">
+                        ${cells}
+                    </div>
                 </div>
             `;
 
             controls.innerHTML = `
                 <div class="max-w-[280px] mx-auto space-y-2.5">
                     <div class="flex items-center justify-between gap-2">
-                        <button onclick="puzzleBoard[selectedCell]=0; renderKenKenScreen();" class="flex-1 h-10 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR CELL</button>
+                        <button onclick="if(!puzzleFixed[selectedCell]){puzzleBoard[selectedCell]=0; renderKenKenScreen();}" class="flex-1 h-10 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR CELL</button>
+                        <button onclick="kenkenStageIdx++; setupKenKen4x4();" class="w-12 h-10 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↻</button>
                     </div>
-                    <div class="grid grid-cols-4 gap-2">
-                        ${[1,2,3,4].map(n => `
-                            <button onclick="inputKenKen(${n})" class="puzzle-num-btn h-12 text-lg">${n}</button>
+                    <div class="grid grid-cols-${gridSize} gap-2">
+                        ${nums.map(n => `
+                            <button onclick="inputKenKen(${n})" class="puzzle-num-btn h-12 text-xl">${n}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -1239,26 +1483,31 @@ jobs:
         }
 
         function inputKenKen(n) {
+            if (puzzleFixed[selectedCell]) return;
             puzzleBoard[selectedCell] = n;
-            if (n === puzzleSolution[selectedCell]) addScore(2);
+            if (n === puzzleSolution[selectedCell]) {
+                addScore(2);
+                const nextEmpty = puzzleBoard.findIndex(v => v === 0);
+                if (nextEmpty !== -1) selectedCell = nextEmpty;
+            }
             renderKenKenScreen();
             if (puzzleBoard.every((v, idx) => v === puzzleSolution[idx])) {
-                addScore(20);
-                setTimeout(() => endActiveGame('KENKEN COMPLETED!'), 300);
+                addScore(15);
+                kenkenStageIdx++;
+                document.getElementById('duel-hint-toast').textContent = `🎉 STAGE ${kenkenStageIdx} CLEARED! Next Map...`;
+                setTimeout(() => {
+                    document.getElementById('duel-hint-toast').textContent = '';
+                    setupKenKen4x4();
+                }, 400);
             }
         }
 
         /********************************************************************
-         * MODE E: MATH MAZE DUELS (Screenshot 5)
+         * MODE E: MATH MAZE STAGES (6 Fast Maps + Auto-Advance!)
          ********************************************************************/
         const MAZE_LEVELS = [
             {
                 target: 11,
-                // 3x3 alternating Number / Operator nodes like Screenshot 5
-                // (0,0)=5, (0,1)=+, (0,2)=1
-                // (1,0)=-, (1,1)=1, (1,2)=/
-                // (2,0)=3, (2,1)=+, (2,2)=9
-                // Valid path: 5 (0,0) -> - (1,0) -> 3 (2,0) -> + (2,1) -> 9 (2,2) => 5 - 3 + 9 = 11!
                 nodes: [
                     { t: 'num', v: 5 }, { t: 'op', v: '+' }, { t: 'num', v: 1 },
                     { t: 'op', v: '-' }, { t: 'num', v: 1 }, { t: 'op', v: '/' },
@@ -1268,13 +1517,48 @@ jobs:
             },
             {
                 target: 14,
-                // Path: 4 -> + -> 3 -> + -> 7 = 14
                 nodes: [
                     { t: 'num', v: 4 }, { t: 'op', v: '+' }, { t: 'num', v: 2 },
                     { t: 'op', v: '+' }, { t: 'num', v: 3 }, { t: 'op', v: '×' },
                     { t: 'num', v: 5 }, { t: 'op', v: '+' }, { t: 'num', v: 7 }
                 ],
                 hint: '💡 Path: 4 → (+) → 3 → (+) → 7 = 14'
+            },
+            {
+                target: 18,
+                nodes: [
+                    { t: 'num', v: 6 }, { t: 'op', v: '×' }, { t: 'num', v: 2 },
+                    { t: 'op', v: '+' }, { t: 'num', v: 4 }, { t: 'op', v: '+' },
+                    { t: 'num', v: 3 }, { t: 'op', v: '+' }, { t: 'num', v: 6 }
+                ],
+                hint: '💡 Path: 6 → (×) → 2 → (+) → 6 = 18'
+            },
+            {
+                target: 9,
+                nodes: [
+                    { t: 'num', v: 8 }, { t: 'op', v: '-' }, { t: 'num', v: 3 },
+                    { t: 'op', v: '+' }, { t: 'num', v: 2 }, { t: 'op', v: '+' },
+                    { t: 'num', v: 5 }, { t: 'op', v: '-' }, { t: 'num', v: 4 }
+                ],
+                hint: '💡 Path: 8 → (-) → 3 → (+) → 4 = 9'
+            },
+            {
+                target: 20,
+                nodes: [
+                    { t: 'num', v: 7 }, { t: 'op', v: '+' }, { t: 'num', v: 3 },
+                    { t: 'op', v: '+' }, { t: 'num', v: 5 }, { t: 'op', v: '×' },
+                    { t: 'num', v: 2 }, { t: 'op', v: '+' }, { t: 'num', v: 2 }
+                ],
+                hint: '💡 Path: 7 → (+) → 3 → (×) → 2 = 20'
+            },
+            {
+                target: 15,
+                nodes: [
+                    { t: 'num', v: 9 }, { t: 'op', v: '-' }, { t: 'num', v: 2 },
+                    { t: 'op', v: '+' }, { t: 'num', v: 4 }, { t: 'op', v: '+' },
+                    { t: 'num', v: 1 }, { t: 'op', v: '+' }, { t: 'num', v: 8 }
+                ],
+                hint: '💡 Path: 9 → (-) → 2 → (+) → 8 = 15'
             }
         ];
         let mazeIdx = 0;
@@ -1284,7 +1568,7 @@ jobs:
             mazeState = {
                 target: lvl.target,
                 nodes: lvl.nodes,
-                path: [0], // starts at index 0 (top-left)
+                path: [0],
                 hint: lvl.hint
             };
             currentHintText = lvl.hint;
@@ -1330,8 +1614,11 @@ jobs:
 
             stage.innerHTML = `
                 <div class="flex flex-col items-center justify-center">
+                    <div class="mb-1 px-3 py-0.5 rounded-full bg-[#12241A] border border-[#22C55E]/40 text-[10px] font-mono-num font-extrabold text-[#4ADE80]">
+                        MATH MAZE • STAGE ${mazeIdx + 1}
+                    </div>
                     <div class="text-[11px] font-extrabold uppercase tracking-widest text-zinc-400">⚑ TARGET GOAL</div>
-                    <div class="font-display text-5xl font-extrabold text-[#22C55E] mb-3">${st.target}</div>
+                    <div class="font-display text-5xl font-extrabold text-[#22C55E] mb-2">${st.target}</div>
                     <div class="grid grid-cols-3 gap-3.5 items-center">
                         ${gridHtml}
                     </div>
@@ -1340,9 +1627,9 @@ jobs:
 
             controls.innerHTML = `
                 <div class="max-w-[260px] mx-auto flex items-center justify-between gap-2 pb-2">
-                    <button onclick="mazeState.path.pop(); if(mazeState.path.length===0) mazeState.path=[0]; renderMathMaze();" class="w-12 h-11 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-300 font-bold">↺</button>
-                    <button onclick="mazeState.path=[0]; renderMathMaze();" class="flex-1 h-11 rounded-xl bg-[#18181C] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
-                    <button onclick="mazeIdx++; setupMathMaze();" class="w-12 h-11 rounded-xl bg-[#18181C] border border-[#27272E] text-zinc-300 font-bold">↻</button>
+                    <button onclick="mazeState.path.pop(); if(mazeState.path.length===0) mazeState.path=[0]; renderMathMaze();" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↺</button>
+                    <button onclick="mazeState.path=[0]; renderMathMaze();" class="flex-1 h-11 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">☰ CLEAR</button>
+                    <button onclick="mazeIdx++; setupMathMaze();" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↻</button>
                 </div>
             `;
         }
@@ -1354,7 +1641,7 @@ jobs:
 
             const r1 = Math.floor(last / 3), c1 = last % 3;
             const r2 = Math.floor(idx / 3), c2 = idx % 3;
-            if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return; // Must be orthogonal neighbor
+            if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return;
             if (st.path.includes(idx)) return;
 
             st.path.push(idx);
@@ -1365,35 +1652,37 @@ jobs:
                 if (res === st.target) {
                     addScore(15);
                     mazeIdx++;
-                    setTimeout(setupMathMaze, 350);
+                    document.getElementById('duel-hint-toast').textContent = `🎉 STAGE ${mazeIdx} CLEARED! Next Maze...`;
+                    setTimeout(() => {
+                        document.getElementById('duel-hint-toast').textContent = '';
+                        setupMathMaze();
+                    }, 380);
                 } else {
-                    setTimeout(() => { st.path = [0]; renderMathMaze(); }, 400);
+                    setTimeout(() => { st.path = [0]; renderMathMaze(); }, 380);
                 }
             }
         }
 
         /********************************************************************
-         * MODE F: PIN BALL RECALL DUELS (Memory - Screenshot 8)
+         * MODE F: PIN BALL RECALL (4x4 Grid + 16 Perimeter Holes - Screenshot 14)
          ********************************************************************/
         function setupPinballRecall() {
-            // 3x3 grid with 2 bumpers (\ or /), ball enters from Left Row 1
-            const bumperRow = rand(0, 2);
-            const bumperCol = rand(0, 2);
+            const bRow = rand(0, 3);
+            const bCol = rand(0, 3);
             const slash = Math.random() < 0.5 ? '/' : '\\';
-            // If ball enters at (bumperRow, 0) moving right -> hits bumper at (bumperRow, bumperCol)
-            // If '/', goes UP (exit Top at col bumperCol); if '\', goes DOWN (exit Bottom at col bumperCol)
-            const exitLabel = slash === '/' ? `TOP-${bumperCol + 1}` : `BOT-${bumperCol + 1}`;
-
-            pinballState = { bumperRow, bumperCol, slash, exitLabel, phase: 'memorize' };
-            currentHintText = `💡 Exit is ${exitLabel}`;
+            // Ball enters from Left at row bRow moving right -> hits (bRow, bCol)
+            // If '/', goes UP -> exits TOP-bCol; if '\', goes DOWN -> exits BOT-bCol
+            const exitPort = slash === '/' ? `T${bCol}` : `B${bCol}`;
+            pinballState = { bRow, bCol, slash, exitPort, phase: 'memorize', revealed: false };
+            currentHintText = `💡 Ball enters Row ${bRow + 1} Left → Deflects to ${exitPort === 'T'+bCol ? 'TOP Col '+(bCol+1) : 'BOTTOM Col '+(bCol+1)}`;
             renderPinball();
 
             setTimeout(() => {
-                if (pinballState) {
+                if (pinballState && selectedGameId === 'pinball') {
                     pinballState.phase = 'guess';
                     renderPinball();
                 }
-            }, 2200);
+            }, 1800);
         }
 
         function renderPinball() {
@@ -1401,90 +1690,550 @@ jobs:
             const controls = document.getElementById('game-controls');
             const st = pinballState;
 
-            let cells = '';
-            for (let r = 0; r < 3; r++) {
-                for (let c = 0; c < 3; c++) {
-                    const hasBumper = (r === st.bumperRow && c === st.bumperCol);
-                    const showIt = st.phase === 'memorize' && hasBumper;
-                    cells += `
-                        <div class="w-16 h-16 rounded-xl bg-[#161922] border border-[#38BDF8]/40 flex items-center justify-center font-mono-num text-2xl font-extrabold text-[#38BDF8]">
-                            ${showIt ? st.slash : ''}
+            let topDots = '';
+            for (let c = 0; c < 4; c++) {
+                const isExit = st.revealed && st.exitPort === `T${c}`;
+                topDots += `<button onclick="guessPinballPort('T${c}')" class="w-8 h-8 rounded-full ${isExit ? 'bg-[#38BDF8] text-black ring-4 ring-[#38BDF8]/40' : 'bg-[#16161A] border border-[#2C2C34]'} flex items-center justify-center text-xs font-black mx-auto">${isExit ? '▼' : ''}</button>`;
+            }
+
+            let botDots = '';
+            for (let c = 0; c < 4; c++) {
+                const isExit = st.revealed && st.exitPort === `B${c}`;
+                botDots += `<button onclick="guessPinballPort('B${c}')" class="w-8 h-8 rounded-full ${isExit ? 'bg-[#38BDF8] text-black ring-4 ring-[#38BDF8]/40' : 'bg-[#16161A] border border-[#2C2C34]'} flex items-center justify-center text-xs font-black mx-auto">${isExit ? '▲' : ''}</button>`;
+            }
+
+            let middleRows = '';
+            for (let r = 0; r < 4; r++) {
+                const isEntry = (r === st.bRow && st.phase !== 'memorize');
+                middleRows += `<div class="w-8 h-8 rounded-full ${isEntry ? 'bg-[#38BDF8] shadow-[0_0_12px_#38BDF8]' : 'bg-[#16161A]'} flex items-center justify-center mx-auto"></div>`;
+                for (let c = 0; c < 4; c++) {
+                    const hasBumper = (r === st.bRow && c === st.bCol);
+                    const showBumper = (st.phase === 'memorize' || st.revealed) && hasBumper;
+                    middleRows += `
+                        <div class="w-12 h-12 rounded-lg bg-[#1A1A1F] border border-[#27272E] flex items-center justify-center font-mono-num text-2xl font-black text-[#38BDF8]">
+                            ${showBumper ? (st.slash === '/' ? '╱' : '╲') : ''}
                         </div>
                     `;
                 }
+                middleRows += `<button onclick="guessPinballPort('R${r}')" class="w-8 h-8 rounded-full bg-[#16161A] border border-[#2C2C34] mx-auto"></button>`;
             }
 
             stage.innerHTML = `
-                <div class="text-center space-y-3">
-                    <span class="px-3 py-1 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-xs font-extrabold uppercase">
-                        ${st.phase === 'memorize' ? '👀 MEMORIZE DEFLECTOR!' : '🎯 WHERE DOES THE BALL EXIT?'}
-                    </span>
-                    <div class="text-xs text-zinc-300 font-bold">Ball enters from <span class="text-[#EAB308]">LEFT ROW ${st.bumperRow + 1} ➜</span></div>
-                    <div class="grid grid-cols-3 gap-2 mx-auto w-fit p-3 rounded-2xl bg-[#11131A] border-2 border-[#38BDF8]">
+                <div class="flex flex-col items-center justify-center space-y-2">
+                    <div class="text-[11px] font-extrabold uppercase tracking-widest text-[#38BDF8] mb-1">
+                        ${st.phase === 'memorize' ? '👀 MEMORIZE DIAGONAL BUMPER!' : '🎯 TAP THE EXIT CIRCLE!'}
+                    </div>
+                    <div class="grid grid-cols-6 gap-2 items-center">
+                        <div></div>${topDots}<div></div>
+                        ${middleRows}
+                        <div></div>${botDots}<div></div>
+                    </div>
+                </div>
+            `;
+
+            controls.innerHTML = `
+                <div class="max-w-[260px] mx-auto flex items-center justify-between gap-2 pb-2">
+                    <button onclick="setupPinballRecall()" class="flex-1 h-11 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">↻ NEXT BALL</button>
+                </div>
+            `;
+        }
+
+        function guessPinballPort(port) {
+            if (!pinballState || pinballState.phase === 'memorize') return;
+            pinballState.revealed = true;
+            if (port === pinballState.exitPort) {
+                addScore(10);
+            }
+            renderPinball();
+            setTimeout(setupPinballRecall, 750);
+        }
+
+        /********************************************************************
+         * MODE G: MEMORY MATRIX 4x4 (Glowing Cyan Tiles - Screenshot 15)
+         ********************************************************************/
+        function setupMindSnap() {
+            const targets = new Set();
+            while (targets.size < 6) {
+                targets.add(rand(0, 15));
+            }
+            snapState = {
+                targets: Array.from(targets),
+                picked: [],
+                phase: 'memorize'
+            };
+            currentHintText = `💡 Memorize the 6 cyan glowing tiles!`;
+            renderMindSnap();
+
+            setTimeout(() => {
+                if (snapState && selectedGameId === 'mindsnap') {
+                    snapState.phase = 'recall';
+                    renderMindSnap();
+                }
+            }, 1600);
+        }
+
+        function renderMindSnap() {
+            const stage = document.getElementById('game-stage');
+            const controls = document.getElementById('game-controls');
+            const st = snapState;
+
+            let cells = '';
+            for (let i = 0; i < 16; i++) {
+                const isTarget = st.targets.includes(i);
+                const isPicked = st.picked.includes(i);
+                const glow = (st.phase === 'memorize' && isTarget) || (st.phase === 'recall' && isPicked);
+                cells += `
+                    <button onclick="tapMemoryTile(${i})" class="w-16 h-16 rounded-2xl transition-all ${glow ? 'bg-[#7DD3FC] shadow-[0_0_16px_rgba(125,211,252,0.5)] scale-95' : 'bg-[#262629] hover:bg-[#303036]'}"></button>
+                `;
+            }
+
+            stage.innerHTML = `
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <div class="text-xs font-extrabold uppercase tracking-widest text-[#7DD3FC]">
+                        ${st.phase === 'memorize' ? '👀 MEMORIZE THE PATTERN' : `TAP THE ${st.targets.length} GLOWING TILES (${st.picked.length}/${st.targets.length})`}
+                    </div>
+                    <div class="grid grid-cols-4 gap-2.5 p-3 rounded-3xl bg-[#000000]">
                         ${cells}
                     </div>
                 </div>
             `;
 
-            const exits = ['TOP-1', 'TOP-2', 'TOP-3', 'BOT-1', 'BOT-2', 'BOT-3'];
             controls.innerHTML = `
-                <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto pb-2">
-                    ${exits.map(ex => `
-                        <button onclick="guessPinball('${ex}')" class="py-3 rounded-xl bg-[#181B24] border border-[#38BDF8] text-xs font-mono-num font-extrabold text-white active:scale-95">${ex}</button>
-                    `).join('')}
+                <div class="max-w-[260px] mx-auto flex items-center justify-between gap-2 pb-2">
+                    <button onclick="setupMindSnap()" class="flex-1 h-11 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-300">↻ NEW PATTERN</button>
                 </div>
             `;
         }
 
-        function guessPinball(ex) {
-            if (pinballState.phase === 'memorize') return;
-            if (ex === pinballState.exitLabel) {
-                addScore(10);
+        function tapMemoryTile(idx) {
+            const st = snapState;
+            if (!st || st.phase !== 'recall' || st.picked.includes(idx)) return;
+            if (st.targets.includes(idx)) {
+                st.picked.push(idx);
+                addScore(2);
+                renderMindSnap();
+                if (st.picked.length === st.targets.length) {
+                    addScore(10);
+                    setTimeout(setupMindSnap, 450);
+                }
+            } else {
+                // Wrong tile: flash pattern again
+                st.phase = 'memorize';
+                renderMindSnap();
+                setTimeout(setupMindSnap, 900);
             }
-            setupPinballRecall();
         }
 
         /********************************************************************
-         * MODE G: MIND SNAP DUELS (Memory - Screenshot 8)
+         * MODE H: COMPACT 4x4 TANGO PUZZLE (Quick Maps + Auto-Advance!)
+         * Rules:
+         * 1. Equal number of ☀️ (1) and 🌙 (2) in each row & column (2 each in 4x4!).
+         * 2. No three ☀️ or three 🌙 adjacent.
+         * 3. '=' clue means same symbol; '×' clue means opposite symbol.
          ********************************************************************/
-        const SNAP_SYMBOLS = ['⚡', '🔥', '💎', '🚀', '🍀'];
-        function setupMindSnap() {
-            const prev = SNAP_SYMBOLS[rand(0, SNAP_SYMBOLS.length - 1)];
-            const curr = Math.random() < 0.45 ? prev : SNAP_SYMBOLS[rand(0, SNAP_SYMBOLS.length - 1)];
-            snapState = { prev, curr };
-            currentHintText = prev === curr ? '💡 MATCH! Tap SNAP!' : '💡 Different! Tap NEXT';
+        const TANGO_LEVELS = [
+            {
+                sol: [
+                    1, 2, 1, 2,
+                    2, 1, 2, 1,
+                    1, 1, 2, 2,
+                    2, 2, 1, 1
+                ],
+                given: { 0: 1, 3: 2, 5: 1, 10: 2, 12: 2 },
+                hClues: { '0,1': '×', '2,0': '=' },
+                vClues: { '1,2': '=', '2,3': '×' }
+            },
+            {
+                sol: [
+                    2, 1, 2, 1,
+                    1, 2, 1, 2,
+                    2, 2, 1, 1,
+                    1, 1, 2, 2
+                ],
+                given: { 1: 1, 4: 1, 7: 2, 8: 2, 15: 2 },
+                hClues: { '0,2': '×', '3,0': '=' },
+                vClues: { '0,0': '×', '1,1': '×' }
+            },
+            {
+                sol: [
+                    1, 2, 2, 1,
+                    2, 1, 1, 2,
+                    1, 2, 1, 2,
+                    2, 1, 2, 1
+                ],
+                given: { 0: 1, 2: 2, 6: 1, 9: 2, 14: 2 },
+                hClues: { '0,1': '=', '1,1': '=' },
+                vClues: { '2,0': '×', '2,3': '×' }
+            },
+            {
+                sol: [
+                    2, 2, 1, 1,
+                    1, 1, 2, 2,
+                    2, 1, 2, 1,
+                    1, 2, 1, 2
+                ],
+                given: { 0: 2, 5: 1, 7: 2, 10: 2, 13: 2 },
+                hClues: { '0,0': '=', '2,1': '×' },
+                vClues: { '0,2': '×', '2,0': '×' }
+            },
+            {
+                sol: [
+                    1, 1, 2, 2,
+                    2, 1, 2, 1,
+                    1, 2, 1, 2,
+                    2, 2, 1, 1
+                ],
+                given: { 1: 1, 3: 2, 4: 2, 11: 2, 14: 1 },
+                hClues: { '0,0': '=', '3,2': '=' },
+                vClues: { '1,1': '×', '1,2': '×' }
+            },
+            {
+                sol: [
+                    2, 1, 1, 2,
+                    1, 2, 2, 1,
+                    2, 1, 2, 1,
+                    1, 2, 1, 2
+                ],
+                given: { 0: 2, 2: 1, 5: 2, 8: 2, 15: 2 },
+                hClues: { '0,1': '=', '1,1': '=' },
+                vClues: { '0,3': '×', '2,2': '×' }
+            },
+            {
+                sol: [
+                    1, 2, 1, 2,
+                    1, 2, 2, 1,
+                    2, 1, 1, 2,
+                    2, 1, 2, 1
+                ],
+                given: { 0: 1, 6: 2, 9: 1, 11: 2, 12: 2 },
+                hClues: { '1,1': '=', '2,1': '=' },
+                vClues: { '0,0': '=', '1,3': '×' }
+            },
+            {
+                sol: [
+                    2, 1, 2, 1,
+                    2, 1, 1, 2,
+                    1, 2, 2, 1,
+                    1, 2, 1, 2
+                ],
+                given: { 1: 1, 4: 2, 7: 2, 8: 1, 14: 1 },
+                hClues: { '1,1': '=', '2,1': '=' },
+                vClues: { '0,0': '=', '2,3': '×' }
+            }
+        ];
+        let tangoIdx = 0;
+        let tangoState = null;
 
+        function setupTangoPuzzle() {
+            const lvl = TANGO_LEVELS[tangoIdx % TANGO_LEVELS.length];
+            const board = new Array(16).fill(0);
+            Object.keys(lvl.given).forEach(k => { board[Number(k)] = lvl.given[k]; });
+            tangoState = {
+                sol: lvl.sol,
+                given: lvl.given,
+                hClues: lvl.hClues,
+                vClues: lvl.vClues,
+                board,
+                history: []
+            };
+            currentHintText = `💡 Stage ${tangoIdx + 1}: Place 2 ☀️ & 2 🌙 in each row & column!`;
+            renderTangoPuzzle();
+        }
+
+        function renderTangoPuzzle() {
             const stage = document.getElementById('game-stage');
             const controls = document.getElementById('game-controls');
+            const st = tangoState;
+
+            let cellsHtml = '';
+            for (let i = 0; i < 16; i++) {
+                const r = Math.floor(i / 4), c = i % 4;
+                const val = st.board[i];
+                const isFixed = st.given[i] !== undefined;
+                const symbol = val === 1 ? '☀️' : (val === 2 ? '🌙' : '');
+                const hClue = st.hClues[`${r},${c}`] || '';
+                const vClue = st.vClues[`${r},${c}`] || '';
+
+                cellsHtml += `
+                    <div onclick="tapTangoCell(${i})" class="aspect-square relative border border-[#262630] ${isFixed ? 'bg-[#14141B]' : 'bg-[#08080B] hover:bg-[#14141A]'} flex items-center justify-center text-3xl cursor-pointer select-none rounded-xl active:scale-95 transition">
+                        <span>${symbol}</span>
+                        ${isFixed ? `<span class="absolute top-1 right-1.5 w-1.5 h-1.5 rounded-full bg-zinc-500"></span>` : ''}
+                        ${hClue ? `<span class="absolute -right-2.5 top-1/2 -translate-y-1/2 z-20 w-5 h-5 rounded-full bg-[#1C1C24] border border-[#EAB308] text-xs font-mono-num font-black text-[#EAB308] flex items-center justify-center">${hClue}</span>` : ''}
+                        ${vClue ? `<span class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 z-20 w-5 h-5 rounded-full bg-[#1C1C24] border border-[#38BDF8] text-xs font-mono-num font-black text-[#38BDF8] flex items-center justify-center">${vClue}</span>` : ''}
+                    </div>
+                `;
+            }
 
             stage.innerHTML = `
-                <div class="flex flex-col items-center gap-4">
-                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#38BDF8]">DO THE CARDS MATCH?</div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-28 h-36 rounded-2xl bg-[#18181D] border-2 border-zinc-700 flex flex-col items-center justify-center">
-                            <span class="text-[10px] text-zinc-500 uppercase font-bold mb-2">PREVIOUS</span>
-                            <span class="text-5xl">${prev}</span>
-                        </div>
-                        <div class="w-28 h-36 rounded-2xl bg-[#18181D] border-2 border-[#38BDF8] flex flex-col items-center justify-center">
-                            <span class="text-[10px] text-[#38BDF8] uppercase font-bold mb-2">CURRENT</span>
-                            <span class="text-5xl">${curr}</span>
-                        </div>
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="mb-1.5 px-3 py-0.5 rounded-full bg-[#241E0E] border border-[#EAB308]/40 text-[11px] font-mono-num font-extrabold text-[#EAB308]">
+                        TANGO 4×4 • STAGE ${tangoIdx + 1} / ${TANGO_LEVELS.length}
+                    </div>
+                    <div class="flex items-center gap-3 text-[11px] font-bold text-zinc-400 mb-2">
+                        <span>☀️ = 2 / row</span>
+                        <span>•</span>
+                        <span>🌙 = 2 / row</span>
+                        <span>•</span>
+                        <span class="text-[#EAB308]">= Same</span>
+                        <span class="text-[#38BDF8]">× Opp</span>
+                    </div>
+                    <div class="w-full max-w-[265px] aspect-square p-2.5 rounded-2xl bg-[#0A0A0E] border-2 border-[#EAB308] grid grid-cols-4 gap-1.5 shadow-xl">
+                        ${cellsHtml}
                     </div>
                 </div>
             `;
 
             controls.innerHTML = `
-                <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto pb-2">
-                    <button onclick="answerSnap(false)" class="py-4 rounded-2xl bg-[#26262C] text-white font-display font-extrabold text-sm uppercase">NEXT Card</button>
-                    <button onclick="answerSnap(true)" class="py-4 rounded-2xl bg-[#38BDF8] text-black font-display font-extrabold text-sm uppercase">⚡ SNAP!</button>
+                <div class="max-w-[280px] mx-auto space-y-2 pb-1">
+                    <div class="flex items-center justify-between gap-2">
+                        <button onclick="undoTangoMove()" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↺</button>
+                        <button onclick="setupTangoPuzzle()" class="flex-1 h-11 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-200">☰ CLEAR</button>
+                        <button onclick="tangoIdx++; setupTangoPuzzle();" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold" title="Next Map">↻</button>
+                    </div>
                 </div>
             `;
         }
 
-        function answerSnap(saidMatch) {
-            const isMatch = snapState.prev === snapState.curr;
-            if (saidMatch === isMatch) addScore(5);
-            setupMindSnap();
+        function tapTangoCell(idx) {
+            const st = tangoState;
+            if (st.given[idx] !== undefined) return;
+            const prev = st.board[idx];
+            const next = (prev + 1) % 3; // 0 -> 1 (☀️) -> 2 (🌙) -> 0
+            st.history.push({ idx, prev });
+            st.board[idx] = next;
+
+            const emptyIdx = st.board.findIndex((v, i) => v !== st.sol[i]);
+            if (emptyIdx !== -1) {
+                currentHintText = `💡 Row ${Math.floor(emptyIdx/4)+1}, Col ${(emptyIdx%4)+1} is ${st.sol[emptyIdx] === 1 ? '☀️' : '🌙'}`;
+            }
+
+            renderTangoPuzzle();
+
+            // Auto-advance to the NEXT Tango map immediately!
+            if (st.board.every((v, i) => v === st.sol[i])) {
+                addScore(20);
+                tangoIdx++;
+                document.getElementById('duel-hint-toast').textContent = `🎉 TANGO STAGE ${tangoIdx} CLEARED! Next Map...`;
+                setTimeout(() => {
+                    document.getElementById('duel-hint-toast').textContent = '';
+                    setupTangoPuzzle();
+                }, 420);
+            }
+        }
+
+        function undoTangoMove() {
+            const last = tangoState.history.pop();
+            if (last) {
+                tangoState.board[last.idx] = last.prev;
+                renderTangoPuzzle();
+            }
+        }
+
+        /********************************************************************
+         * MODE I: QUEENS PUZZLE (8 Distinct 5x5 Maps + Instant Next Level!)
+         ********************************************************************/
+        const QUEENS_LEVELS = [
+            {
+                regions: [
+                    0, 1, 2, 2, 2,
+                    0, 1, 2, 2, 2,
+                    0, 0, 2, 2, 2,
+                    0, 3, 3, 3, 3,
+                    0, 3, 4, 4, 3
+                ],
+                crowns: [1, 8, 10, 19, 22]
+            },
+            {
+                regions: [
+                    1, 1, 2, 2, 2,
+                    0, 1, 2, 3, 3,
+                    0, 0, 4, 4, 3,
+                    0, 4, 4, 3, 3,
+                    0, 0, 4, 3, 3
+                ],
+                crowns: [1, 7, 10, 17, 23]
+            },
+            {
+                regions: [
+                    0, 0, 1, 1, 1,
+                    0, 2, 2, 1, 1,
+                    3, 2, 2, 4, 1,
+                    3, 3, 4, 4, 4,
+                    3, 3, 3, 4, 4
+                ],
+                crowns: [0, 8, 11, 19, 22]
+            },
+            {
+                regions: [
+                    0, 0, 0, 1, 1,
+                    0, 2, 2, 2, 1,
+                    3, 3, 2, 4, 1,
+                    3, 3, 4, 4, 4,
+                    3, 3, 3, 4, 4
+                ],
+                crowns: [2, 9, 11, 18, 20]
+            },
+            {
+                regions: [
+                    1, 1, 1, 2, 2,
+                    1, 0, 0, 2, 2,
+                    3, 0, 0, 4, 2,
+                    3, 3, 4, 4, 4,
+                    3, 3, 3, 4, 4
+                ],
+                crowns: [0, 8, 11, 19, 22]
+            },
+            {
+                regions: [
+                    0, 1, 1, 1, 2,
+                    0, 0, 1, 2, 2,
+                    3, 0, 4, 4, 2,
+                    3, 3, 4, 2, 2,
+                    3, 3, 4, 4, 4
+                ],
+                crowns: [1, 9, 10, 17, 23]
+            },
+            {
+                regions: [
+                    0, 0, 1, 1, 2,
+                    0, 3, 3, 1, 2,
+                    0, 3, 4, 2, 2,
+                    3, 3, 4, 4, 2,
+                    3, 4, 4, 4, 4
+                ],
+                crowns: [2, 9, 10, 16, 23]
+            },
+            {
+                regions: [
+                    1, 1, 2, 2, 2,
+                    1, 0, 0, 2, 3,
+                    1, 0, 4, 3, 3,
+                    1, 4, 4, 4, 3,
+                    4, 4, 4, 3, 3
+                ],
+                crowns: [2, 6, 14, 15, 23]
+            }
+        ];
+        let queensIdx = 0;
+        let queensState = null;
+
+        function setupQueensPuzzle() {
+            const lvl = QUEENS_LEVELS[queensIdx % QUEENS_LEVELS.length];
+            queensState = {
+                regions: lvl.regions,
+                crowns: lvl.crowns,
+                board: new Array(25).fill(0), // 0=empty, 1=dot(•), 2=crown(👑)
+                history: []
+            };
+            const snacBadge = document.getElementById('snac-lvl-num');
+            if (snacBadge) snacBadge.textContent = String(queensIdx + 1);
+            currentHintText = `💡 Stage ${queensIdx + 1}: Tap once for •, twice for 👑 (1 per row, col & color)!`;
+            renderQueensPuzzle();
+        }
+
+        function renderQueensPuzzle() {
+            const stage = document.getElementById('game-stage');
+            const controls = document.getElementById('game-controls');
+            const st = queensState;
+
+            const regionColors = [
+                'bg-[#F97316]', // Orange
+                'bg-[#10B981]', // Green
+                'bg-[#F472B6]', // Pink
+                'bg-[#FACC15]', // Yellow
+                'bg-[#38BDF8]'  // Blue
+            ];
+
+            let cellsHtml = '';
+            for (let i = 0; i < 25; i++) {
+                const reg = st.regions[i];
+                const val = st.board[i];
+                const content = val === 2 ? '👑' : (val === 1 ? '•' : '');
+                cellsHtml += `
+                    <div onclick="tapQueensCell(${i})" class="aspect-square ${regionColors[reg]} border border-black/40 flex items-center justify-center text-2xl font-black text-black cursor-pointer select-none active:scale-95 transition">
+                        ${content}
+                    </div>
+                `;
+            }
+
+            const placedCrowns = st.board.filter(v => v === 2).length;
+
+            stage.innerHTML = `
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="mb-1.5 px-3 py-0.5 rounded-full bg-[#26121F] border border-[#EC4899]/40 text-[11px] font-mono-num font-extrabold text-[#F472B6]">
+                        QUEENS 5×5 • STAGE ${queensIdx + 1} / ${QUEENS_LEVELS.length}
+                    </div>
+                    <div class="text-[11px] font-bold text-zinc-400 mb-2">1 👑 per Row, Column & Color (${placedCrowns}/5)</div>
+                    <div class="w-full max-w-[275px] aspect-square rounded-2xl overflow-hidden border-4 border-[#1F1F26] grid grid-cols-5 shadow-2xl">
+                        ${cellsHtml}
+                    </div>
+                </div>
+            `;
+
+            controls.innerHTML = `
+                <div class="max-w-[280px] mx-auto space-y-2 pb-1">
+                    <div class="flex items-center justify-between gap-2">
+                        <button onclick="undoQueensMove()" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold">↺</button>
+                        <button onclick="setupQueensPuzzle()" class="flex-1 h-11 rounded-xl bg-[#141418] border border-[#2D2D35] text-xs font-extrabold uppercase text-zinc-200">☰ CLEAR</button>
+                        <button onclick="queensIdx++; setupQueensPuzzle();" class="w-12 h-11 rounded-xl bg-[#141418] border border-[#27272E] text-zinc-300 font-bold" title="Next Map">↻</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function tapQueensCell(idx) {
+            const st = queensState;
+            const prev = st.board[idx];
+            const next = (prev + 1) % 3; // 0 -> 1 (•) -> 2 (👑) -> 0
+            st.history.push({ idx, prev });
+            st.board[idx] = next;
+
+            const missingCrown = st.crowns.find(c => st.board[c] !== 2);
+            if (missingCrown !== undefined) {
+                currentHintText = `💡 Crown 👑 belongs at Row ${Math.floor(missingCrown/5)+1}, Col ${(missingCrown%5)+1}`;
+            }
+
+            renderQueensPuzzle();
+
+            // Check if user placed 5 valid non-attacking crowns (1 per row, col, region, no diagonal touch)
+            const userCrowns = [];
+            st.board.forEach((v, i) => { if (v === 2) userCrowns.push(i); });
+            if (userCrowns.length === 5 && isValidQueensPlacement(userCrowns, st.regions)) {
+                addScore(25);
+                queensIdx++;
+                document.getElementById('duel-hint-toast').textContent = `🎉 QUEENS STAGE ${queensIdx} CLEARED! Loading Stage ${queensIdx + 1}...`;
+                setTimeout(() => {
+                    document.getElementById('duel-hint-toast').textContent = '';
+                    setupQueensPuzzle();
+                }, 420);
+            }
+        }
+
+        function isValidQueensPlacement(crowns, regions) {
+            const rows = new Set(), cols = new Set(), regs = new Set();
+            const coords = [];
+            for (const idx of crowns) {
+                const r = Math.floor(idx / 5), c = idx % 5, reg = regions[idx];
+                if (rows.has(r) || cols.has(c) || regs.has(reg)) return false;
+                rows.add(r); cols.add(c); regs.add(reg);
+                coords.push([r, c]);
+            }
+            for (let i = 0; i < coords.length; i++) {
+                for (let j = i + 1; j < coords.length; j++) {
+                    if (Math.abs(coords[i][0] - coords[j][0]) <= 1 && Math.abs(coords[i][1] - coords[j][1]) <= 1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function undoQueensMove() {
+            const last = queensState.history.pop();
+            if (last) {
+                queensState.board[last.idx] = last.prev;
+                renderQueensPuzzle();
+            }
         }
 
         /********************************************************************
@@ -1502,15 +2251,13 @@ jobs:
             clearInterval(botTimer);
 
             state.dailyDone = Math.min(7, state.dailyDone + 1);
-            if (userScore >= botScore) {
-                state.wins++;
-                state.ratings[activeCategory] += 8;
-            }
+            state.wins++;
+            state.ratings[activeCategory] += 8;
             state.history.unshift({ mode: selectedGameId, score: userScore });
             saveState();
 
             document.getElementById('active-game-overlay').classList.add('hidden');
-            document.getElementById('modal-title').textContent = customTitle || (userScore >= botScore ? 'YOU WON THE DUEL!' : 'BOT WON THIS ROUND');
+            document.getElementById('modal-title').textContent = customTitle || 'CHALLENGE COMPLETE!';
             document.getElementById('modal-user-score').textContent = userScore;
             document.getElementById('modal-bot-score').textContent = botScore;
             document.getElementById('results-modal').classList.remove('hidden');
@@ -1523,7 +2270,8 @@ jobs:
 
         function replayCurrentGame() {
             document.getElementById('results-modal').classList.add('hidden');
-            launchSelectedGame(withBot);
+            advanceStageIndex();
+            launchSelectedGame(false);
         }
 
         function resetCareerData() {
@@ -1534,6 +2282,23 @@ jobs:
         /********************************************************************
          * 3. GITHUB ACTIONS APK BUILDER GENERATOR (1-CLICK DOWNLOADS)
          ********************************************************************/
+        const EMBEDDED_LOGOS = {
+            'matiks-icon.png': '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',
+            'matiks-foreground.png': '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',
+            'matiks-background.png': 'iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAJJElEQVR4nO3YsZGFMBAFweWKCGSQf3zfIAXOIgVkTLclc583pWNd6xkAIOVv9wEAwPfO93H/7p13bLOuNTP2229/kf32z3T3+wEAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIOta1nt1HAADf8gMAAEHn+7h/9847tlnXmhn77be/yH77Z7r7/QAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAEHetaz+4jAIBv+QEAgKDzfdy/e+cd26xrzYz99ttfZL/9M939fgAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCjnWtZ/cRAMC3/AAAQND5Pu7fvfOObda1ZsZ+++0vst/+me5+PwAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBx7rWs/sIAOBbfgAAIOh8H/fv3nnHNutaM2O//fYX2W//THe/HwAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAICgY13r2X0EAPAtPwAAEHS+j/t377xjm3WtmbHffvuL7Ld/prvfDwAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAEDQsa717D4CAPiWHwAACDrfx/27d96xzbrWzNhvv/1F9ts/093vBwAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACDoWNd6dh8BAHzLDwAABJ3v4/7dO+/YZl1rZuy33/4i++2f6e73AwAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABD0D+7ezAEy7PnMAAAAAElFTkSuQmCC'
+        };
+
+        function downloadPngLogo(name) {
+            const b64 = EMBEDDED_LOGOS[name];
+            if (!b64) return;
+            const a = document.createElement('a');
+            a.href = 'data:image/png;base64,' + b64;
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
         const GITHUB_WORKFLOW_YAML = `name: Build Android APK
 on:
   push:
@@ -1566,6 +2331,18 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap add android || true
           npx cap sync android
+
+      - name: Apply 3-Layer Custom Logo (Icon, Foreground, Background)
+        run: |
+          for dir in android/app/src/main/res/mipmap-*dpi*; do
+            if [ -d "$dir" ]; then
+              [ -f "matiks-icon.png" ] && cp matiks-icon.png "$dir/ic_launcher.png" && cp matiks-icon.png "$dir/ic_launcher_round.png"
+              [ -f "matiks-foreground.png" ] && cp matiks-foreground.png "$dir/ic_launcher_foreground.png"
+              [ -f "matiks-background.png" ] && cp matiks-background.png "$dir/ic_launcher_background.png"
+            fi
+          done
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
 
       - name: Build Debug APK with Gradle
         run: |

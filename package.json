@@ -1,7 +1,7 @@
 {
   "name": "matiks-offline-arena",
-  "version": "2.0.0",
-  "description": "Offline Mental Math & Puzzle Duels App",
+  "version": "3.0.0",
+  "description": "Offline Mental Math & Fast Logic Puzzle App",
   "scripts": {
     "sync": "npx cap sync"
   },
