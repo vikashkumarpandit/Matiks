@@ -893,7 +893,7 @@ jobs:
             // Setup Timer
             clearInterval(gameTimer);
             clearInterval(botTimer);
-            if (timerSetting === 'zen' || selectedGameId === 'tango' || selectedGameId === 'queens') {
+            if (timerSetting === 'zen' || selectedGameId === 'tango' || selectedGameId === 'queens' || selectedGameId === 'anzan') {
                 document.getElementById('duel-timer').textContent = '∞ SOLO';
             } else {
                 timeLeft = (selectedGameId === 'sprint' || selectedGameId === 'ability') ? 60 : 120;
@@ -906,7 +906,9 @@ jobs:
             }
 
             // Route to specific game builder
-            if (['sprint', 'fastest', 'anzan', 'ability'].includes(selectedGameId)) {
+            if (selectedGameId === 'anzan') {
+                setupFlashAnzanGame();
+            } else if (['sprint', 'fastest', 'ability'].includes(selectedGameId)) {
                 setupCompactKeyboardGame();
             } else if (selectedGameId === 'sudoku') {
                 setupSudoku6x6();
@@ -1071,6 +1073,288 @@ jobs:
             if (mathProblem && mathInput === mathProblem.ans) {
                 addScore(selectedGameId === 'ability' ? 5 : 1);
                 nextCompactMathQuestion();
+            }
+        }
+
+        /********************************************************************
+         * MODE A2: FLASH ANZAN SOLO (Exact Screenshot 36 Setup + Sequential Flash)
+         * - Choose Number of digits (1 to 4 Digits)
+         * - Choose Time Interval (300ms to 3000ms)
+         * - Toggle Include Subtraction (ON / OFF)
+         * - 10 Numbers flash one-by-one -> Type total sum at the end!
+         ********************************************************************/
+        let anzanConfig = {
+            digits: 1,
+            intervalMs: 1500,
+            includeSub: true,
+            count: 10
+        };
+        let anzanRuntime = null;
+        let anzanTimeout = null;
+
+        function setupFlashAnzanGame() {
+            clearTimeout(anzanTimeout);
+            anzanRuntime = {
+                phase: 'setup', // 'setup' | 'prep' | 'flashing' | 'answer'
+                numbers: [],
+                currentIndex: 0,
+                totalSum: 0,
+                prepCount: 3,
+                userAns: ''
+            };
+            currentHintText = '💡 Set digits & interval, then tap START FLASH!';
+            renderFlashAnzanSetup();
+        }
+
+        function changeAnzanDigits(delta) {
+            anzanConfig.digits = Math.max(1, Math.min(4, anzanConfig.digits + delta));
+            renderFlashAnzanSetup();
+        }
+
+        function changeAnzanInterval(delta) {
+            anzanConfig.intervalMs = Math.max(300, Math.min(3500, anzanConfig.intervalMs + delta));
+            renderFlashAnzanSetup();
+        }
+
+        function toggleAnzanSub() {
+            anzanConfig.includeSub = !anzanConfig.includeSub;
+            renderFlashAnzanSetup();
+        }
+
+        function renderFlashAnzanSetup() {
+            const stage = document.getElementById('game-stage');
+            const controls = document.getElementById('game-controls');
+
+            stage.innerHTML = `
+                <div class="w-full max-w-[330px] flex flex-col justify-between h-full py-1 select-none">
+                    <!-- Top Preview Score Banner (Matches Screenshot 36) -->
+                    <div class="text-center space-y-1 my-auto">
+                        <div class="flex items-center justify-around">
+                            <span class="font-display text-4xl font-extrabold text-white">${anzanConfig.includeSub ? '-10' : '+10'}</span>
+                            <span class="font-display text-4xl font-extrabold text-white">90</span>
+                        </div>
+                        <div class="font-mono-num text-xs font-bold text-zinc-400">10 FLASHES</div>
+                        <div class="text-[11px] font-extrabold uppercase tracking-widest text-[#84CC16] pt-1">
+                            CONFIGURE FLASH ANZAN
+                        </div>
+                    </div>
+
+                    <!-- Conversion Pill Box (Matches Screenshot 36) -->
+                    <div class="bg-[#121215] border border-[#24242A] rounded-2xl p-3 my-2 text-center space-y-2">
+                        <div class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-400">CONVERSION</div>
+                        <div class="flex items-center justify-center gap-2.5">
+                            <div class="px-3.5 py-2 rounded-full border border-[#32323A] bg-[#09090B] text-[11px] font-extrabold text-zinc-300">
+                                ${anzanConfig.count} NUMBERS
+                            </div>
+                            <span class="text-[#84CC16] font-black text-base">➔</span>
+                            <div class="px-3.5 py-2 rounded-full border border-[#32323A] bg-[#09090B] text-[11px] font-extrabold text-zinc-300">
+                                100 POINTS
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Controls (Matches Screenshot 36) -->
+                    <div class="space-y-2.5 bg-[#09090B] border border-[#1F1F26] rounded-2xl p-3">
+                        <!-- Number of digits -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-zinc-200">Number of digits</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeAnzanDigits(-1)" class="w-9 h-9 rounded-xl bg-[#16161A] border border-[#2E2E36] text-white font-bold text-base active:scale-95">-</button>
+                                <span class="w-16 text-center font-mono-num text-xs font-extrabold text-white">${anzanConfig.digits} DIGIT${anzanConfig.digits > 1 ? 'S' : ''}</span>
+                                <button onclick="changeAnzanDigits(1)" class="w-9 h-9 rounded-xl bg-[#16161A] border border-[#2E2E36] text-white font-bold text-base active:scale-95">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Time Interval -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-zinc-200">Time Interval</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeAnzanInterval(-250)" class="w-9 h-9 rounded-xl bg-[#16161A] border border-[#2E2E36] text-white font-bold text-base active:scale-95">-</button>
+                                <span class="w-16 text-center font-mono-num text-xs font-extrabold text-white">${anzanConfig.intervalMs}MS</span>
+                                <button onclick="changeAnzanInterval(250)" class="w-9 h-9 rounded-xl bg-[#16161A] border border-[#2E2E36] text-white font-bold text-base active:scale-95">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Include Subtraction Toggle -->
+                        <div class="flex items-center justify-between pt-0.5">
+                            <span class="text-xs font-bold text-zinc-200">Include Subtraction</span>
+                            <button onclick="toggleAnzanSub()" class="w-12 h-7 rounded-full p-1 transition-all flex items-center ${anzanConfig.includeSub ? 'bg-[#84CC16] justify-end' : 'bg-[#27272E] justify-start'}">
+                                <span class="w-5 h-5 rounded-full bg-black shadow"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            controls.innerHTML = `
+                <div class="max-w-[330px] mx-auto pb-1">
+                    <button onclick="startAnzanSequence()" class="w-full py-3.5 rounded-2xl bg-[#84CC16] text-black font-display font-extrabold text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
+                        ▶ START FLASH (${anzanConfig.count} NUMBERS)
+                    </button>
+                </div>
+            `;
+        }
+
+        function generateAnzanSequence() {
+            const minVal = Math.pow(10, anzanConfig.digits - 1);
+            const maxVal = Math.pow(10, anzanConfig.digits) - 1;
+            const seq = [];
+            let runningSum = 0;
+
+            for (let i = 0; i < anzanConfig.count; i++) {
+                let n = rand(minVal, maxVal);
+                if (anzanConfig.includeSub && i > 0 && Math.random() < 0.35) {
+                    n = -n;
+                }
+                seq.push(n);
+                runningSum += n;
+            }
+            return { seq, runningSum };
+        }
+
+        function startAnzanSequence() {
+            clearTimeout(anzanTimeout);
+            const { seq, runningSum } = generateAnzanSequence();
+            anzanRuntime.numbers = seq;
+            anzanRuntime.totalSum = runningSum;
+            anzanRuntime.currentIndex = 0;
+            anzanRuntime.prepCount = 3;
+            anzanRuntime.phase = 'prep';
+            anzanRuntime.userAns = '';
+            currentHintText = `💡 Keep adding each flashed number! (Running sum hint: ${runningSum})`;
+            runAnzanPrepStep();
+        }
+
+        function runAnzanPrepStep() {
+            const stage = document.getElementById('game-stage');
+            const controls = document.getElementById('game-controls');
+            controls.innerHTML = `
+                <div class="max-w-[280px] mx-auto pb-2">
+                    <button onclick="setupFlashAnzanGame()" class="w-full py-3 rounded-xl bg-[#16161A] border border-[#2E2E36] text-xs font-extrabold uppercase text-zinc-300">⚙ CHANGE SETTINGS</button>
+                </div>
+            `;
+
+            if (anzanRuntime.prepCount > 0) {
+                stage.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-center space-y-3">
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-zinc-400">PREP PHASE ENDS IN</div>
+                        <div class="font-display text-7xl font-extrabold text-[#84CC16] animate-pop">${anzanRuntime.prepCount}</div>
+                        <div class="text-[11px] font-mono-num text-zinc-400">${anzanConfig.digits} Digit • ${anzanConfig.intervalMs}ms</div>
+                    </div>
+                `;
+                anzanRuntime.prepCount--;
+                anzanTimeout = setTimeout(runAnzanPrepStep, 800);
+            } else {
+                anzanRuntime.phase = 'flashing';
+                runAnzanFlashStep();
+            }
+        }
+
+        function runAnzanFlashStep() {
+            const stage = document.getElementById('game-stage');
+            const idx = anzanRuntime.currentIndex;
+
+            if (idx < anzanRuntime.numbers.length) {
+                const num = anzanRuntime.numbers[idx];
+                const colorClass = num < 0 ? 'text-[#F43F5E]' : 'text-[#84CC16]';
+                stage.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-center space-y-4">
+                        <div class="px-3 py-1 rounded-full bg-[#16161C] border border-[#2C2C35] font-mono-num text-xs font-bold text-zinc-300">
+                            NUMBER ${idx + 1} / ${anzanRuntime.numbers.length}
+                        </div>
+                        <div id="flashed-num-box" class="font-mono-num text-6xl sm:text-7xl font-extrabold ${colorClass} animate-pop">
+                            ${num}
+                        </div>
+                    </div>
+                `;
+                anzanRuntime.currentIndex++;
+                anzanTimeout = setTimeout(runAnzanFlashStep, anzanConfig.intervalMs);
+            } else {
+                renderAnzanAnswerPad();
+            }
+        }
+
+        function renderAnzanAnswerPad() {
+            anzanRuntime.phase = 'answer';
+            const stage = document.getElementById('game-stage');
+            const controls = document.getElementById('game-controls');
+            currentHintText = `💡 Total Sum of all ${anzanConfig.count} numbers = ${anzanRuntime.totalSum}`;
+
+            stage.innerHTML = `
+                <div class="flex flex-col items-center justify-center w-full max-w-xs text-center">
+                    <div class="px-4 py-1 rounded-lg bg-[#182610] border border-[#84CC16]/40 text-[11px] font-extrabold tracking-widest uppercase text-[#84CC16] mb-2">
+                        WHAT IS THE TOTAL SUM?
+                    </div>
+                    <div class="text-xs text-zinc-400 font-mono-num mb-3">
+                        (${anzanConfig.count} Numbers • ${anzanConfig.digits} Digit • ${anzanConfig.intervalMs}ms)
+                    </div>
+                    <div class="w-full h-14 rounded-2xl bg-[#18181C] border-2 border-[#84CC16] flex items-center justify-center font-mono-num text-3xl font-extrabold text-white" id="anzan-input-box">
+                        ${anzanRuntime.userAns}
+                    </div>
+                    <div id="anzan-feedback" class="text-xs font-extrabold mt-2 min-h-[18px]"></div>
+                </div>
+            `;
+
+            controls.innerHTML = `
+                <div class="space-y-1.5">
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button onclick="typeAnzanKey('1')" class="key-4x4">1</button>
+                        <button onclick="typeAnzanKey('2')" class="key-4x4">2</button>
+                        <button onclick="typeAnzanKey('3')" class="key-4x4">3</button>
+                        <button onclick="typeAnzanKey('-')" class="key-4x4">-</button>
+
+                        <button onclick="typeAnzanKey('4')" class="key-4x4">4</button>
+                        <button onclick="typeAnzanKey('5')" class="key-4x4">5</button>
+                        <button onclick="typeAnzanKey('6')" class="key-4x4">6</button>
+                        <button onclick="setupFlashAnzanGame()" class="key-4x4 text-xs font-extrabold text-[#EAB308]">⚙ SET</button>
+
+                        <button onclick="typeAnzanKey('7')" class="key-4x4">7</button>
+                        <button onclick="typeAnzanKey('8')" class="key-4x4">8</button>
+                        <button onclick="typeAnzanKey('9')" class="key-4x4">9</button>
+                        <button onclick="typeAnzanKey('C')" class="key-4x4 font-bold">C</button>
+
+                        <button onclick="startAnzanSequence()" class="key-4x4 text-xs font-extrabold text-[#38BDF8]">↻ REPLAY</button>
+                        <button onclick="typeAnzanKey('0')" class="key-4x4">0</button>
+                        <button onclick="typeAnzanKey('BACK')" class="key-4x4 text-base">⌫</button>
+                        <button onclick="submitAnzanSum()" class="key-4x4 bg-[#84CC16] text-black font-extrabold text-sm">OK ✓</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function typeAnzanKey(k) {
+            if (!anzanRuntime || anzanRuntime.phase !== 'answer') return;
+            if (k === 'C') {
+                anzanRuntime.userAns = '';
+            } else if (k === 'BACK') {
+                anzanRuntime.userAns = anzanRuntime.userAns.slice(0, -1);
+            } else if (anzanRuntime.userAns.length < 7) {
+                anzanRuntime.userAns += k;
+            }
+            const box = document.getElementById('anzan-input-box');
+            if (box) box.textContent = anzanRuntime.userAns;
+
+            // Auto-check if exact match
+            if (anzanRuntime.userAns === String(anzanRuntime.totalSum)) {
+                submitAnzanSum();
+            }
+        }
+
+        function submitAnzanSum() {
+            if (!anzanRuntime || anzanRuntime.phase !== 'answer') return;
+            const fb = document.getElementById('anzan-feedback');
+            if (Number(anzanRuntime.userAns) === anzanRuntime.totalSum && anzanRuntime.userAns !== '') {
+                addScore(100);
+                if (fb) {
+                    fb.className = 'text-xs font-extrabold mt-2 text-[#4ADE80]';
+                    fb.textContent = `🎉 CORRECT! Sum = ${anzanRuntime.totalSum} (+100 PTS) • Starting Next Flash...`;
+                }
+                anzanTimeout = setTimeout(startAnzanSequence, 900);
+            } else {
+                if (fb) {
+                    fb.className = 'text-xs font-extrabold mt-2 text-rose-400';
+                    fb.textContent = `❌ Sum was ${anzanRuntime.totalSum} (Seq: ${anzanRuntime.numbers.join(', ')})`;
+                }
             }
         }
 
@@ -2240,6 +2524,7 @@ jobs:
          * END GAME & RESULTS HANDLING
          ********************************************************************/
         function exitActiveGame() {
+            clearTimeout(anzanTimeout);
             clearInterval(gameTimer);
             clearInterval(botTimer);
             document.getElementById('active-game-overlay').classList.add('hidden');
@@ -2283,9 +2568,9 @@ jobs:
          * 3. GITHUB ACTIONS APK BUILDER GENERATOR (1-CLICK DOWNLOADS)
          ********************************************************************/
         const EMBEDDED_LOGOS = {
-            'matiks-icon.png': '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',
-            'matiks-foreground.png': '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',
-            'matiks-background.png': 'iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAJJElEQVR4nO3YsZGFMBAFweWKCGSQf3zfIAXOIgVkTLclc583pWNd6xkAIOVv9wEAwPfO93H/7p13bLOuNTP2229/kf32z3T3+wEAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIOta1nt1HAADf8gMAAEHn+7h/9847tlnXmhn77be/yH77Z7r7/QAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAEHetaz+4jAIBv+QEAgKDzfdy/e+cd26xrzYz99ttfZL/9M939fgAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCjnWtZ/cRAMC3/AAAQND5Pu7fvfOObda1ZsZ+++0vst/+me5+PwAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBx7rWs/sIAOBbfgAAIOh8H/fv3nnHNutaM2O//fYX2W//THe/HwAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAICgY13r2X0EAPAtPwAAEHS+j/t377xjm3WtmbHffvuL7Ld/prvfDwAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAEDQsa717D4CAPiWHwAACDrfx/27d96xzbrWzNhvv/1F9ts/093vBwAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACDoWNd6dh8BAHzLDwAABJ3v4/7dO+/YZl1rZuy33/4i++2f6e73AwAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABD0D+7ezAEy7PnMAAAAAElFTkSuQmCC'
+            'matiks-icon.png': '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',
+            'matiks-foreground.png': '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',
+            'matiks-background.png': 'iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAIYUlEQVR4nO3WMRHAIADAwNKdA/9mqYsy5F9Bxoy59nkAgJT3dgAA8D8DAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDoA01wBSustThIAAAAAElFTkSuQmCC'
         };
 
         function downloadPngLogo(name) {
@@ -2332,17 +2617,20 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
-      - name: Apply 3-Layer Custom Logo (Icon, Foreground, Background)
+      - name: Replace Default Capacitor Icon with Custom Matiks o/o Logo
         run: |
-          for dir in android/app/src/main/res/mipmap-*dpi*; do
+          # Remove ALL adaptive vector/webp/xml launcher icons so Android never shows the blue Capacitor X logo
+          rm -rf android/app/src/main/res/mipmap-anydpi*
+          find android/app/src/main/res/ -name "ic_launcher*.webp" -delete || true
+          find android/app/src/main/res/ -name "ic_launcher*.xml" -delete || true
+          for dir in android/app/src/main/res/mipmap-*; do
             if [ -d "$dir" ]; then
-              [ -f "matiks-icon.png" ] && cp matiks-icon.png "$dir/ic_launcher.png" && cp matiks-icon.png "$dir/ic_launcher_round.png"
-              [ -f "matiks-foreground.png" ] && cp matiks-foreground.png "$dir/ic_launcher_foreground.png"
-              [ -f "matiks-background.png" ] && cp matiks-background.png "$dir/ic_launcher_background.png"
+              cp matiks-icon.png "$dir/ic_launcher.png"
+              cp matiks-icon.png "$dir/ic_launcher_round.png"
+              cp matiks-foreground.png "$dir/ic_launcher_foreground.png"
+              cp matiks-background.png "$dir/ic_launcher_background.png"
             fi
           done
-          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
 
       - name: Build Debug APK with Gradle
         run: |
